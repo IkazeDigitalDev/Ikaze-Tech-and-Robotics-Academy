@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+    <linearGradient id="accent-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#818CF8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded Square Background -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#bg-grad)"/>
+
+  <!-- Subtle Inner Highlight Border -->
+  <rect x="3" y="3" width="58" height="58" rx="15" fill="none" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="1.5"/>
+
+  <!-- Left Person (Secondary) -->
+  <circle cx="21" cy="26" r="5.5" fill="url(#accent-grad)"/>
+  <path d="M11 45 C11 38.5, 15.5 35, 21 35 C23.5 35, 25.8 35.8, 27.5 37.2 C24.8 39.2, 23 42, 23 45 Z" fill="url(#accent-grad)"/>
+
+  <!-- Right Person (Secondary) -->
+  <circle cx="43" cy="26" r="5.5" fill="url(#accent-grad)"/>
+  <path d="M53 45 C53 38.5, 48.5 35, 43 35 C40.5 35, 38.2 35.8, 36.5 37.2 C39.2 39.2, 41 42, 41 45 Z" fill="url(#accent-grad)"/>
+
+  <!-- Center Person (Primary Foreground) -->
+  <circle cx="32" cy="23" r="6.5" fill="#FFFFFF"/>
+  <path d="M20 46 C20 38.5, 25.2 34, 32 34 C38.8 34, 44 38.5, 44 46 Z" fill="#FFFFFF"/>
+
+  <!-- Live Meet / Active Dot Indicator -->
+  <circle cx="49" cy="15" r="5" fill="#10B981" stroke="#1D4ED8" stroke-width="2"/>
+</svg>
