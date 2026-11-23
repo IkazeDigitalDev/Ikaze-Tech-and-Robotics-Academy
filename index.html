@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ikaze Tech & Robotics Academy — Think. Learn. Build. Teach. Transform.</title>
+<meta name="description" content="Ikaze Tech & Robotics Academy: an open technology, robotics, coding and innovation ecosystem born at TTC Muhanga, Rwanda.">
+<meta name="theme-color" content="#02040c">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322d3ee'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%2304081c'/%3E%3Cpath d='M32 10 50 20v20L32 54 14 40V20z' fill='none' stroke='url(%23g)' stroke-width='4' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='32' r='6' fill='url(%23g)'/%3E%3Cpath d='M32 26V10M37 35l13 5M27 35l-13 5' stroke='url(%23g)' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--tx:#eaf2ff;--mut:#a7b6d3;--cy:#22d3ee;--vi:#8b5cf6;--gr:#34d399;--gl:rgba(6,12,32,.64);--bd:rgba(150,185,255,.18);--r:18px;--fd:'Space Grotesk',system-ui,sans-serif;--fb:'Inter',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:var(--fb);color:var(--tx);background:#02040c;overflow-x:hidden;line-height:1.55}
+a{color:var(--cy)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+
+/* ===== SOLAR SYSTEM BACKGROUND ===== */
+#solar-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#02040c}
+#solar-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#solar-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,12,.25),rgba(2,4,12,.55));pointer-events:none}
+
+/* ===== ORIGINAL WORLDS (kept for compatibility, hidden by default) ===== */
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;background:#02040c;display:none}
+.world{position:absolute;inset:0;opacity:0;transition:opacity 1.3s ease}
+.world.on{opacity:1}
+.w-cosmos{background:radial-gradient(ellipse at 50% 25%,#0f1f5c 0%,#050a24 55%,#01030a 100%)}
+.w-silk{background:radial-gradient(circle at center,#3B82F6 0%,#172554 45%,#020617 100%)}
+.w-pista{background:radial-gradient(circle at center,#CDE8B5 0%,#567A36 45%,#13200B 100%)}
+.w-dark{background:radial-gradient(circle at center,#6B4423 0%,#2A1810 50%,#080403 100%)}
+.w-nature{background:radial-gradient(circle at center,#0f3d33 0%,#041a16 100%)}
+.w-dna{background:radial-gradient(circle at center,#12306b 0%,#050d24 100%)}
+.vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 2s ease-in-out;will-change:opacity}
+#veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,4,12,.35),rgba(2,4,12,.62))}
+#gl{position:absolute;inset:0;width:100%;height:100%}
+
+header,main,footer{position:relative;z-index:2}
+.wrap{width:min(1200px,100% - 2*clamp(16px,4vw,40px));margin-inline:auto}
+section{padding:clamp(70px,11vw,120px) 0;scroll-margin-top:56px}
+.kick{font:600 .75rem var(--fd);letter-spacing:.22em;text-transform:uppercase;color:var(--cy);margin-bottom:10px}
+h1,h2,h3{font-family:var(--fd);line-height:1.1}
+h2{font-size:clamp(1.8rem,5vw,3.1rem);margin-bottom:12px;max-width:20ch}
+h3{font-size:1.15rem;margin:10px 0 6px}
+.lead{color:var(--mut);max-width:62ch;margin-bottom:28px;font-size:clamp(.95rem,2.2vw,1.1rem)}
+.m{color:var(--mut);font-size:.92rem}.s{font-size:.8rem}
+.card{background:var(--gl);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--bd);border-radius:var(--r);padding:20px;min-width:0}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-top:12px}
+.row:first-child{margin-top:0}
+.pill,.tags span{display:inline-block;font-size:.72rem;padding:3px 10px;border-radius:99px;border:1px solid var(--bd);background:rgba(255,255,255,.05);color:var(--mut)}
+.pill.enr{color:#fbbf24;border-color:#fbbf2466}.pill.done,.pill.ok{color:var(--gr);border-color:#34d39966}.pill.avail{color:var(--cy)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 20px;border-radius:99px;border:1px solid var(--bd);background:rgba(255,255,255,.07);cursor:pointer;font-weight:600;font-size:.9rem;text-decoration:none;color:var(--tx);transition:transform .2s,box-shadow .2s,background .2s}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.14)}
+.btn.p{border:0;background:linear-gradient(135deg,#06b6d4,#7c3aed);box-shadow:0 0 24px rgba(34,211,238,.35)}
+.btn.sm{min-height:38px;padding:6px 14px;font-size:.82rem}
+.btn[disabled]{opacity:.55;cursor:default;transform:none}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--cy),var(--vi));transition:width .5s}
+input,select,textarea{width:100%;min-height:44px;padding:10px 14px;border-radius:12px;border:1px solid var(--bd);background:rgba(2,6,20,.7);font-size:16px}
+textarea{min-height:90px;resize:vertical}
+label{display:block;font-size:.82rem;color:var(--mut);margin:12px 0 4px}
+.chk{display:flex;gap:8px;align-items:center;font-size:.88rem;color:var(--tx);margin:0}
+.chk input{width:20px;min-height:20px;height:20px}
+.fl{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}.fl>*{flex:1 1 160px;width:auto}
+.fl .chips{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:8px}
+.chip{min-height:38px;padding:6px 14px;border-radius:99px;border:1px solid var(--bd);background:rgba(255,255,255,.05);cursor:pointer;font-size:.82rem}
+.chip[aria-pressed=true]{background:var(--cy);color:#02040c;border-color:var(--cy);font-weight:600}
+.empty{padding:30px;text-align:center;color:var(--mut);border:1px dashed var(--bd);border-radius:var(--r);grid-column:1/-1}
+/* header */
+header{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top);background:linear-gradient(180deg,rgba(2,4,12,.85),rgba(2,4,12,.35));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--bd)}
+.nav{display:flex;align-items:center;gap:10px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--tx);font:700 .95rem var(--fd);line-height:1.1;margin-right:auto;min-width:0}
+.brand svg{width:34px;height:34px;flex:none}.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nl{display:none;gap:4px}
+.nl a{padding:8px 12px;border-radius:99px;color:var(--mut);text-decoration:none;font-size:.88rem;white-space:nowrap}
+.nl a.on,.nl a:hover{color:var(--tx);background:rgba(255,255,255,.1)}
+.ib{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:rgba(255,255,255,.06);cursor:pointer;display:grid;place-items:center;flex:none}
+.ib b{position:absolute;top:-2px;right:-2px;min-width:18px;height:18px;border-radius:9px;background:var(--vi);font-size:.68rem;display:grid;place-items:center;padding:0 4px}
+#lang{width:auto;min-height:44px;padding:6px 8px;display:none}
+@media(min-width:1100px){.nl{display:flex}.brand{margin-right:12px}.nav{gap:8px}.nl{margin-right:auto}#lang{display:block}}
+@media(max-width:420px){.brand span{font-size:.8rem;max-width:150px;white-space:normal}}
+/* hero */
+#home{min-height:100dvh;display:flex;align-items:center;padding-top:110px}
+.hero h1{font-size:clamp(2.1rem,7.2vw,5.2rem);max-width:17ch;letter-spacing:-.02em;text-transform:uppercase;animation:rise 1.2s cubic-bezier(.2,.7,.2,1) both}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--cy),var(--vi));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero .lead{margin-top:20px;animation:rise 1.2s .15s both}
+.hero .btns{display:flex;flex-wrap:wrap;gap:12px;animation:rise 1.2s .3s both}
+.tag{font:600 clamp(.8rem,2.6vw,1rem) var(--fd);letter-spacing:.2em;text-transform:uppercase;color:var(--cy);margin-bottom:18px}
+@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.scr{margin-top:48px;display:flex;align-items:center;gap:10px;font-size:.7rem;letter-spacing:.25em;color:var(--mut);text-transform:uppercase}
+.scr i{width:18px;height:28px;border:1px solid var(--mut);border-radius:9px;position:relative}
+.scr i:after{content:"";position:absolute;left:50%;top:5px;width:2px;height:6px;margin-left:-1px;background:var(--cy);border-radius:2px;animation:dot 2s infinite}
+@keyframes dot{50%{transform:translateY(9px);opacity:.3}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:24px}
+.stats .card{text-align:center}.stats b{display:block;font:700 clamp(1.6rem,5vw,2.4rem) var(--fd);color:var(--cy)}
+/* cycle */
+.cyc{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.cyc button{min-height:64px;border-radius:16px;border:1px solid var(--bd);background:var(--gl);cursor:pointer;font:600 .9rem var(--fd);letter-spacing:.08em}
+.cyc button[aria-pressed=true]{background:linear-gradient(135deg,#06b6d4,#7c3aed);border:0}
+#cyd{margin-top:14px}
+.two{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+/* depts */
+.dg{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font:700 .95rem var(--fd);background:linear-gradient(135deg,rgba(34,211,238,.25),rgba(139,92,246,.35));border:1px solid var(--bd)}
+button.card{text-align:left;cursor:pointer;width:100%;transition:transform .2s,border-color .2s}
+button.card:hover{transform:translateY(-3px);border-color:var(--cy)}
+/* paths */
+.steps{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.steps .chip{min-height:34px;font-size:.76rem}
+.steps .chip[aria-pressed=true]{background:var(--gr);border-color:var(--gr)}
+/* kanban */
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:10px;-webkit-overflow-scrolling:touch}
+.col{scroll-snap-align:start;background:var(--gl);border:1px solid var(--bd);border-radius:var(--r);padding:12px;min-height:160px;backdrop-filter:blur(12px)}
+.col h4{font:600 .8rem var(--fd);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:8px}
+.tk{background:rgba(255,255,255,.07);border-radius:12px;padding:10px;margin-bottom:8px;font-size:.88rem}
+.tk .row{margin-top:8px}.tk .btn{min-width:44px;padding:4px 10px}
+.hi{color:#fb7185}.md{color:#fbbf24}.lo{color:var(--gr)}
+/* calendar */
+#cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:.85rem}
+#cal span,#cal b,#cal i{padding:8px 0;border-radius:8px}#cal b{color:var(--mut);font-weight:500}
+#cal .ev{background:var(--vi);font-weight:700}
+.ev-i{display:flex;gap:14px;align-items:center}.ev-d{flex:none;width:58px;text-align:center;border-radius:12px;padding:6px;background:rgba(139,92,246,.3);font:700 1.2rem var(--fd);line-height:1.1}
+.ev-d small{display:block;font-size:.65rem;letter-spacing:.1em;color:var(--mut)}
+.ev-i>div:nth-child(2){flex:1;min-width:0}
+.demo{display:inline-block;font-size:.7rem;padding:2px 10px;border-radius:99px;background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid #fbbf2455;margin-left:8px;vertical-align:middle;letter-spacing:.05em}
+/* dialog */
+dialog{border:0;padding:0;background:transparent;color:var(--tx);width:min(720px,100%);max-height:92dvh;margin:auto;overflow:visible}
+dialog::backdrop{background:rgba(1,3,10,.75);backdrop-filter:blur(6px)}
+.sheet{position:relative;background:#070d24;border:1px solid var(--bd);border-radius:22px;padding:clamp(18px,4vw,30px);max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch}
+.x{position:absolute;top:10px;right:10px;width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:rgba(255,255,255,.06);cursor:pointer}
+.sheet h2{font-size:1.6rem;padding-right:44px}
+dialog.drawer{margin:0 0 0 auto;height:100dvh;max-height:100dvh;width:min(340px,88vw)}
+dialog.drawer .sheet{height:100%;border-radius:22px 0 0 22px;max-height:100dvh}
+dialog.search{margin-top:max(8vh,env(safe-area-inset-top))}
+.nd a{display:block;padding:12px;border-radius:12px;color:var(--tx);text-decoration:none;font-weight:500}.nd a:hover,.nd a.on{background:rgba(255,255,255,.1)}
+.ni{padding:12px;border-radius:12px;background:rgba(255,255,255,.05);margin-bottom:8px;border-left:3px solid transparent}.ni.u{border-color:var(--cy)}
+.res a,.res button{display:block;width:100%;text-align:left;padding:12px;border-radius:12px;background:rgba(255,255,255,.05);border:0;margin-top:8px;cursor:pointer;color:var(--tx)}
+@media(max-width:600px){dialog{margin:auto 0 0;width:100%}.sheet{border-radius:22px 22px 0 0}dialog.search{margin-top:0}}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;z-index:99;background:#0b1535;border:1px solid var(--cy);padding:12px 20px;border-radius:99px;font-size:.88rem;transition:.3s;pointer-events:none;max-width:92vw;text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+footer{padding:60px 0 calc(30px + env(safe-area-inset-bottom));background:rgba(2,4,12,.82);border-top:1px solid var(--bd);backdrop-filter:blur(12px)}
+.fg{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.fg h4{font:600 .8rem var(--fd);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.fg a{display:block;color:var(--mut);text-decoration:none;padding:4px 0}.fg a:hover{color:var(--cy)}
+.cr{margin-top:34px;padding-top:20px;border-top:1px solid var(--bd);display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:.85rem;color:var(--mut)}
+.cr a{color:var(--tx);font-weight:600;text-decoration:none;border-bottom:1px solid var(--cy)}
+.skip{position:absolute;left:-999px;top:0;background:#fff;color:#000;padding:10px;z-index:99}.skip:focus{left:10px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#home">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><symbol id="logo" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#04081c" stroke="#22d3ee33"/><path d="M32 10 50 20v20L32 54 14 40V20z" fill="none" stroke="url(#lg)" stroke-width="4" stroke-linejoin="round"/><circle cx="32" cy="32" r="6" fill="url(#lg)"/><path d="M32 26V10M37 35l13 5M27 35l-13 5" stroke="url(#lg)" stroke-width="3"/></symbol></svg>
+
+<!-- SOLAR SYSTEM BACKGROUND -->
+<div id="solar-bg" aria-hidden="true">
+  <canvas id="solar-canvas"></canvas>
+  <div id="solar-overlay"></div>
+</div>
+
+<!-- ORIGINAL BG (hidden) -->
+<div id="bg" aria-hidden="true"><div id="veil"></div><canvas id="gl"></canvas></div>
+
+<header>
+ <div class="wrap nav">
+  <a class="brand" href="#home" aria-label="Ikaze Tech & Robotics Academy home"><svg aria-hidden="true"><use href="#logo"/></svg><span>Ikaze Tech &amp; Robotics Academy</span></a>
+  <nav class="nl" id="topnav" aria-label="Main"></nav>
+  <select id="lang" aria-label="Language"><option value="en">EN</option><option value="fr">FR</option><option value="rw">RW</option><option value="sw">SW</option></select>
+  <button class="ib" data-act="search" aria-label="Search">⌕</button>
+  <button class="ib" data-act="notif" aria-label="Notifications">🔔<b id="nb" hidden>0</b></button>
+  <button class="btn sm p" id="authbtn" data-act="auth">Log in</button>
+  <button class="ib" data-act="menu" aria-label="Open menu">☰</button>
+ </div>
+</header>
+
+<main id="main">
+<section id="home" data-world="cosmos"><div class="wrap hero">
+ <p class="tag" data-i="tag">Think. Learn. Build. Teach. Transform.</p>
+ <h1 data-i="hero">Where talent meets technology, and ideas become reality.</h1>
+ <p class="lead">An open innovation and learning ecosystem born at TTC Muhanga, Rwanda, connecting students, developers, engineers, educators, researchers and makers to learn together, build meaningful technology and empower communities.</p>
+ <div class="btns"><a class="btn p" href="#about">Explore the Ecosystem</a><a class="btn" href="#join">Join the Community</a><a class="btn" href="#projects">Discover Projects</a><a class="btn" href="#learning">Start Learning</a></div>
+ <div class="scr"><i></i>Scroll to explore</div>
+</div></section>
+
+<section id="about" data-world="silk"><div class="wrap">
+ <p class="kick">About</p><h2>A living innovation organization</h2>
+ <p class="lead">Our vision: a connected global ecosystem that empowers people of all ages to gain technological knowledge, build practical skills and create solutions that improve education, communities and the future.</p>
+ <div class="cyc" id="cyc"></div><div class="card" id="cyd"></div>
+ <div class="two" style="margin-top:16px"><div class="card"><h3>Mission</h3><p class="m">Unite talents, knowledge, ideas and opportunities through collaboration, practical learning, mentorship, research, engineering and community-centred innovation.</p></div>
+ <div class="card"><h3>Core values</h3><div class="tags" id="vals"></div></div></div>
+</div></section>
+
+<section id="departments" data-world="dna"><div class="wrap">
+ <p class="kick">Departments</p><h2>Ten departments, one ecosystem</h2><p class="lead">Tap a department to see its skills, activities and how to join.</p>
+ <div class="grid" id="deps"></div>
+</div></section>
+
+<section id="learning" data-world="pista"><div class="wrap">
+ <p class="kick">Learning Hub</p><h2>Learn from age 6 to professional</h2><p class="lead">Courses for every stage. Available, enrolled and completed courses are clearly separated. Certificates are issued only when approved.</p>
+ <div class="fl"><input id="cq" type="search" placeholder="Search courses or skills" aria-label="Search courses"><div class="chips" id="cg" role="group" aria-label="Filter by group"></div></div>
+ <div class="grid" id="clist"></div>
+ <h2 style="margin-top:56px">Learning paths</h2><p class="lead">Tick each milestone as you finish it. Finish a path to earn its badge.</p>
+ <div class="grid" id="paths"></div>
+</div></section>
+
+<section id="ideas" data-world="cosmos"><div class="wrap">
+ <p class="kick">Idea Vault</p><h2>Every great innovation begins with an idea</h2><p class="lead">Submit simple, unfinished or experimental ideas. Support the ones you believe in and offer your skills.</p>
+ <div class="fl"><input id="iq" type="search" placeholder="Search ideas" aria-label="Search ideas"><select id="ic" aria-label="Category"></select><select id="is" aria-label="Sort"><option value="new">Newest</option><option value="top">Most supported</option></select><button class="btn p" data-act="idea-new">+ Submit an idea</button></div>
+ <div class="grid" id="ilist"></div>
+</div></section>
+
+<section id="projects" data-world="dark"><div class="wrap">
+ <p class="kick">Project workspace</p><h2>Build together, task by task</h2><p class="lead">Each approved project gets a workspace. Move tasks across the board with the arrows (works great on touch screens).</p>
+ <div class="fl" id="psel"></div><div class="card" id="pinfo" style="margin-bottom:14px"></div>
+ <div class="row" style="margin:0 0 12px"><span></span><button class="btn sm p" data-act="task-add">+ Add task</button></div>
+ <div class="board" id="board"></div>
+</div></section>
+
+<section id="community" data-world="silk"><div class="wrap">
+ <p class="kick">Community</p><h2>A community of talents, a network of innovators</h2><p class="lead">Channels, a member directory and mentors. <span class="demo">Sample members</span></p>
+ <div class="tags" id="chan" style="margin-bottom:18px"></div>
+ <div class="grid" id="mem"></div>
+ <p class="m s" style="margin-top:12px">Mentorship involving minors is always supervised and follows our safeguarding rules.</p>
+</div></section>
+
+<section id="events" data-world="pista"><div class="wrap">
+ <p class="kick">Meetings &amp; Events</p><h2>Workshops, hackathons and meetings</h2><p class="lead">RSVP to events or schedule a meeting. <span class="demo">Sample events</span></p>
+ <div class="two"><div class="card"><div class="row"><button class="btn sm" data-act="cal" data-id="-1" aria-label="Previous month">‹</button><b id="calt"></b><button class="btn sm" data-act="cal" data-id="1" aria-label="Next month">›</button></div><div id="cal" style="margin-top:12px"></div><button class="btn p" style="margin-top:14px;width:100%" data-act="mtg-new">+ Schedule a meeting</button></div>
+ <div id="evl" style="display:grid;gap:12px"></div></div>
+</div></section>
+
+<section id="resources" data-world="dna"><div class="wrap">
+ <p class="kick">Resource library</p><h2>Shared knowledge</h2><p class="lead">Only openly licensed or permitted resources are listed. Save the ones you need.</p>
+ <div class="fl"><input id="rq" type="search" placeholder="Search resources" aria-label="Search resources"><select id="rt" aria-label="Type"></select></div>
+ <div class="grid" id="rl"></div>
+</div></section>
+
+<section id="outreach" data-world="nature"><div class="wrap">
+ <p class="kick">Community outreach</p><h2>Technology that serves people</h2><p class="lead">School visits, digital literacy, robotics for children, teacher empowerment and local-language content. <span class="demo">Sample figures, not real data</span></p>
+ <div class="stats" id="imp"></div>
+ <div class="tags" id="outp" style="margin-top:22px"></div>
+</div></section>
+
+<section id="research" data-world="dna"><div class="wrap">
+ <p class="kick">Research center</p><h2>Serious questions, honest experiments</h2><div class="grid" id="rs"></div>
+</div></section>
+
+<section id="opportunities" data-world="pista"><div class="wrap">
+ <p class="kick">Opportunities</p><h2>Scholarships, internships and more</h2><p class="lead"><span class="demo">Sample listings</span></p>
+ <div class="grid" id="op"></div>
+</div></section>
+
+<section id="join" data-world="nature"><div class="wrap">
+ <p class="kick">Membership</p><h2>Join the ecosystem</h2><p class="lead">Apply in a minute. We only collect what we need. Applications are reviewed by the team.</p>
+ <div class="card" id="jbox"></div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+ <div class="fg">
+  <div><a class="brand" href="#home" style="margin:0 0 10px"><svg aria-hidden="true"><use href="#logo"/></svg><span>Ikaze Tech &amp; Robotics Academy</span></a><p class="m s">Think. Learn. Build. Teach. Transform.<br>Born at TTC Muhanga, Rwanda.</p><p style="margin-top:12px"><span class="pill" id="mode">Checking…</span></p></div>
+  <div><h4>Learn</h4><a href="#learning">Courses</a><a href="#departments">Departments</a><a href="#resources">Resources</a></div>
+  <div><h4>Build</h4><a href="#ideas">Idea Vault</a><a href="#projects">Projects</a><a href="#research">Research</a></div>
+  <div><h4>Community</h4><a href="#community">Members</a><a href="#events">Events</a><a href="#outreach">Outreach</a><a href="#opportunities">Opportunities</a></div>
+ </div>
+ <div class="cr"><span>© <span id="yr"></span> Ikaze Tech &amp; Robotics Academy</span>
+  <span>Designed by <a href="https://ikaze-digital.vercel.app/" target="_blank" rel="noopener noreferrer">Ikaze Digital</a></span>
+  <span>Developed by <a href="https://ikaze-digital.vercel.app/" target="_blank" rel="noopener noreferrer">Ikaze Digital</a></span>
+  <span>Technology collaboration: <a href="https://imena-hub.vercel.app/" target="_blank" rel="noopener noreferrer">Imena Hub</a></span></div>
+</div></footer>
+
+<dialog id="dlg" aria-label="Dialog"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ===== SOLAR SYSTEM BACKGROUND (mobile-optimized, self-contained) ===== */
+(function(){
+  'use strict';
+  const canvas = document.getElementById('solar-canvas');
+  if (!canvas || !window.THREE) return;
+  
+  // Performance flags
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const LOW_QUALITY = isMobile || reducedMotion;
+  
+  // Renderer
+  let renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: !LOW_QUALITY, alpha: true, powerPreference: 'high-performance' });
+  } catch(e) { return; }
+  
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, LOW_QUALITY ? 1.5 : 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x02040c, 1);
+  
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x02040c);
+  
+  const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 8000);
+  camera.position.set(0, 50, 160);
+  camera.lookAt(0, 0, 0);
+  
+  // Lights
+  scene.add(new THREE.AmbientLight(0x404060, 0.7));
+  const sunLight = new THREE.PointLight(0xffeedd, 3.0, 0, 0);
+  sunLight.position.set(0, 0, 0);
+  scene.add(sunLight);
+  
+  const fillLight = new THREE.DirectionalLight(0x446688, 0.4);
+  fillLight.position.set(40, 60, 40);
+  scene.add(fillLight);
+  
+  // Starfield helper
+  function makeStars(count, size, minR, maxR, colored) {
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const r = minR + Math.random() * (maxR - minR);
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+      pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+      pos[i*3+2] = r * Math.cos(phi);
+      const b = 0.6 + Math.random() * 0.4;
+      let rC = b, gC = b, bC = b;
+      if (colored) {
+        const t = Math.random();
+        if (t < 0.25) { rC = b*0.7; gC = b*0.8; bC = b; }
+        else if (t < 0.5) { rC = b; gC = b*0.9; bC = b*0.7; }
+        else if (t < 0.75) { rC = b*0.9; gC = b*0.9; bC = b*0.95; }
+        else { rC = b*0.8; gC = b*0.7; bC = b*0.6; }
+      }
+      col[i*3] = rC; col[i*3+1] = gC; col[i*3+2] = bC;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const mat = new THREE.PointsMaterial({
+      size: size, vertexColors: true, transparent: true, opacity: 0.9,
+      sizeAttenuation: true, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    return new THREE.Points(geo, mat);
+  }
+  
+  const starCountFar = LOW_QUALITY ? 8000 : 20000;
+  const starCountMid = LOW_QUALITY ? 4000 : 10000;
+  const starCountNear = LOW_QUALITY ? 2000 : 5000;
+  
+  const starsFar = makeStars(starCountFar, 1.0, [1200, 2400], true);
+  const starsMid = makeStars(starCountMid, 0.8, [600, 1200], false);
+  const starsNear = makeStars(starCountNear, 1.3, [250, 600], true);
+  scene.add(starsFar, starsMid, starsNear);
+  
+  // Sun
+  const sunGeo = new THREE.SphereGeometry(8, 64, 64);
+  const sunMat = new THREE.MeshStandardMaterial({
+    color: 0xffaa00, emissive: 0xff5500, emissiveIntensity: 3.0,
+    roughness: 0.3, metalness: 0.0
+  });
+  const sun = new THREE.Mesh(sunGeo, sunMat);
+  scene.add(sun);
+  
+  // Sun glow
+  const glowCanvas = document.createElement('canvas');
+  glowCanvas.width = 128; glowCanvas.height = 128;
+  const gctx = glowCanvas.getContext('2d');
+  const grad = gctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0, 'rgba(255,200,0,1)');
+  grad.addColorStop(0.3, 'rgba(255,140,0,0.8)');
+  grad.addColorStop(0.6, 'rgba(255,80,0,0.3)');
+  grad.addColorStop(1, 'rgba(255,0,0,0)');
+  gctx.fillStyle = grad;
+  gctx.fillRect(0, 0, 128, 128);
+  const glowTex = new THREE.CanvasTexture(glowCanvas);
+  
+  const corona1 = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  corona1.scale.set(35, 35, 1);
+  sun.add(corona1);
+  const corona2 = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.5 }));
+  corona2.scale.set(65, 65, 1);
+  sun.add(corona2);
+  
+  // Moon (simplified for performance)
+  const moonGeo = new THREE.SphereGeometry(6, 32, 32);
+  const moonMat = new THREE.MeshStandardMaterial({
+    color: 0xccccdd, emissive: 0x223344, emissiveIntensity: 0.3,
+    roughness: 0.95, metalness: 0.0
+  });
+  const moon = new THREE.Mesh(moonGeo, moonMat);
+  moon.visible = false;
+  scene.add(moon);
+  
+  // Moon glow
+  const moonGlowCanvas = document.createElement('canvas');
+  moonGlowCanvas.width = 128; moonGlowCanvas.height = 128;
+  const mgctx = moonGlowCanvas.getContext('2d');
+  const mgrad = mgctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  mgrad.addColorStop(0, 'rgba(200,220,255,0.8)');
+  mgrad.addColorStop(0.3, 'rgba(150,180,255,0.4)');
+  mgrad.addColorStop(0.6, 'rgba(80,100,200,0.1)');
+  mgrad.addColorStop(1, 'rgba(0,0,50,0)');
+  mgctx.fillStyle = mgrad;
+  mgctx.fillRect(0, 0, 128, 128);
+  const moonGlowTex = new THREE.CanvasTexture(moonGlowCanvas);
+  
+  const moonGlow1 = new THREE.Sprite(new THREE.SpriteMaterial({ map: moonGlowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+  moonGlow1.scale.set(28, 28, 1);
+  moon.add(moonGlow1);
+  
+  // Orbit paths
+  const orbitDists = [14, 21, 29, 39, 52, 68, 84, 100];
+  orbitDists.forEach(dist => {
+    const points = [];
+    for (let i = 0; i <= 128; i++) {
+      const a = (i / 128) * Math.PI * 2;
+      points.push(new THREE.Vector3(Math.cos(a) * dist, 0, Math.sin(a) * dist));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    const mat = new THREE.LineBasicMaterial({ color: 0x8899aa, transparent: true, opacity: 0.14, depthWrite: false });
+    scene.add(new THREE.LineLoop(geo, mat));
+  });
+  
+  // Planets
+  const planetDefs = [
+    { r: 1.4, d: 14, c: 0xaaaaaa, s: 0.080, moons: 0 },
+    { r: 1.9, d: 21, c: 0xffcc88, s: 0.060, moons: 0 },
+    { r: 2.1, d: 29, c: 0x2288ff, s: 0.048, moons: 1, mDist: 3.2, mSize: 0.35, mSp: 2.4 },
+    { r: 1.8, d: 39, c: 0xcc6644, s: 0.038, moons: 2, mDist: 2.8, mSize: 0.25, mSp: 3.0 },
+    { r: 5.0, d: 52, c: 0xddbb99, s: 0.024, moons: 3, mDist: 6.5, mSize: 0.4, mSp: 4.0 },
+    { r: 4.4, d: 68, c: 0xeeddbb, s: 0.018, ring: true, ringC: 0xc2b280, ringI: 6.5, ringO: 11.0, moons: 2, mDist: 9.5, mSize: 0.38, mSp: 3.8 },
+    { r: 3.6, d: 84, c: 0x88ccff, s: 0.012, moons: 2, mDist: 5.8, mSize: 0.32, mSp: 4.8 },
+    { r: 3.6, d: 100, c: 0x3366cc, s: 0.009, moons: 1, mDist: 5.5, mSize: 0.33, mSp: 5.2 }
+  ];
+  
+  const planets = [];
+  planetDefs.forEach(pd => {
+    const grp = new THREE.Group();
+    const geo = new THREE.SphereGeometry(pd.r, 32, 32);
+    const mat = new THREE.MeshStandardMaterial({ color: pd.c, roughness: 0.6, metalness: 0.05, emissive: new THREE.Color(pd.c).multiplyScalar(0.12) });
+    const mesh = new THREE.Mesh(geo, mat);
+    grp.add(mesh);
+    
+    if (pd.ring) {
+      const ringGeo = new THREE.RingGeometry(pd.ringI, pd.ringO, 48);
+      const ringMat = new THREE.MeshStandardMaterial({ color: pd.ringC, side: THREE.DoubleSide, transparent: true, opacity: 0.7, roughness: 0.7 });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.rotation.z = 0.15;
+      grp.add(ring);
+    }
+    
+    const moons = [];
+    if (pd.moons > 0) {
+      for (let m = 0; m < pd.moons; m++) {
+        const mGeo = new THREE.SphereGeometry(pd.mSize * (0.8 + Math.random() * 0.4), 12, 12);
+        const mMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.8 });
+        const mMesh = new THREE.Mesh(mGeo, mMat);
+        const aOff = (m / pd.moons) * Math.PI * 2;
+        const dist = pd.mDist + m * 0.8;
+        mMesh.position.set(Math.cos(aOff) * dist, (Math.random() - 0.5) * 0.6, Math.sin(aOff) * dist);
+        grp.add(mMesh);
+        moons.push({ mesh: mMesh, dist, aOff, sp: pd.mSp * (0.8 + Math.random() * 0.6) });
+      }
+    }
+    
+    grp.position.x = pd.d;
+    scene.add(grp);
+    planets.push({ group: grp, mesh, distance: pd.d, speed: pd.s, angle: Math.random() * Math.PI * 2, moons });
+  });
+  
+  // Asteroid belt
+  const astCount = LOW_QUALITY ? 5000 : 10000;
+  const astPos = new Float32Array(astCount * 3);
+  const astCol = new Float32Array(astCount * 3);
+  for (let i = 0; i < astCount; i++) {
+    const r = 42 + Math.random() * 10;
+    const t = Math.random() * Math.PI * 2;
+    const ph = (Math.random() - 0.5) * 0.4;
+    astPos[i*3] = r * Math.cos(t);
+    astPos[i*3+1] = r * Math.sin(ph);
+    astPos[i*3+2] = r * Math.sin(t);
+    const sh = 0.4 + Math.random() * 0.6;
+    astCol[i*3] = sh * 0.9;
+    astCol[i*3+1] = sh * 0.8;
+    astCol[i*3+2] = sh * 0.7;
+  }
+  const astGeo = new THREE.BufferGeometry();
+  astGeo.setAttribute('position', new THREE.BufferAttribute(astPos, 3));
+  astGeo.setAttribute('color', new THREE.BufferAttribute(astCol, 3));
+  const asteroidBelt = new THREE.Points(astGeo, new THREE.PointsMaterial({ size: 0.3, vertexColors: true, transparent: true, opacity: 0.9, sizeAttenuation: true, depthWrite: false }));
+  scene.add(asteroidBelt);
+  
+  // Kuiper belt
+  const kuiCount = LOW_QUALITY ? 3000 : 6000;
+  const kuiPos = new Float32Array(kuiCount * 3);
+  for (let i = 0; i < kuiCount; i++) {
+    const r = 115 + Math.random() * 45;
+    const t = Math.random() * Math.PI * 2;
+    const ph = (Math.random() - 0.5) * 0.7;
+    kuiPos[i*3] = r * Math.cos(t);
+    kuiPos[i*3+1] = r * Math.sin(ph);
+    kuiPos[i*3+2] = r * Math.sin(t);
+  }
+  const kuiGeo = new THREE.BufferGeometry();
+  kuiGeo.setAttribute('position', new THREE.BufferAttribute(kuiPos, 3));
+  const kuiperBelt = new THREE.Points(kuiGeo, new THREE.PointsMaterial({ size: 0.5, color: 0xaaccff, transparent: true, opacity: 0.6, sizeAttenuation: true, depthWrite: false }));
+  scene.add(kuiperBelt);
+  
+  // Scroll progress
+  let scrollProgress = 0;
+  function updateScroll() {
+    const total = document.body.scrollHeight - window.innerHeight;
+    scrollProgress = Math.min(1, Math.max(0, window.scrollY / (total || 1)));
+  }
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+  
+  // Resize
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    updateScroll();
+  });
+  
+  // Animation
+  const clock = new THREE.Clock();
+  let elapsed = 0;
+  
+  function animate() {
+    requestAnimationFrame(animate);
+    const delta = Math.min(clock.getDelta(), 0.1);
+    elapsed += delta;
+    
+    // Planets
+    planets.forEach(p => {
+      p.angle += p.speed * delta * 12;
+      if (p.angle > Math.PI * 2) p.angle -= Math.PI * 2;
+      p.group.position.x = Math.cos(p.angle) * p.distance;
+      p.group.position.z = Math.sin(p.angle) * p.distance;
+      p.mesh.rotation.y += 0.03;
+      p.moons.forEach(m => {
+        const a = elapsed * m.sp * 3.5 + m.aOff;
+        m.mesh.position.x = Math.cos(a) * m.dist;
+        m.mesh.position.z = Math.sin(a) * m.dist;
+        m.mesh.position.y = Math.sin(a * 0.8) * 0.5;
+        m.mesh.rotation.y += 0.06;
+      });
+    });
+    
+    // Sun
+    sun.rotation.y += 0.005;
+    const pulse = 1 + Math.sin(elapsed * 4) * 0.06;
+    corona1.scale.set(35 * pulse, 35 * pulse, 1);
+    corona2.scale.set(65 * (1 + Math.sin(elapsed * 3) * 0.05), 65 * (1 + Math.sin(elapsed * 3) * 0.05), 1);
+    
+    // Moon
+    moon.rotation.y += 0.003;
+    
+    // Belts
+    asteroidBelt.rotation.y += 0.0045;
+    kuiperBelt.rotation.y += 0.002;
+    
+    // Stars
+    starsFar.rotation.y += 0.0002;
+    starsMid.rotation.y += 0.0003;
+    starsNear.rotation.y += 0.0005;
+    
+    // Camera travel
+    let tx, ty, tz;
+    if (scrollProgress < 0.3) {
+      const t = scrollProgress / 0.3;
+      tx = Math.sin(elapsed * 0.05) * 12;
+      ty = 70 - t * 25;
+      tz = 250 - t * 80;
+    } else if (scrollProgress < 0.6) {
+      const t = (scrollProgress - 0.3) / 0.3;
+      tx = -30 + t * 60;
+      ty = 45 - t * 20;
+      tz = 170 - t * 100;
+    } else if (scrollProgress < 0.85) {
+      const t = (scrollProgress - 0.6) / 0.25;
+      tx = 30 + t * 40;
+      ty = 25 - t * 10;
+      tz = 70 - t * 35;
+    } else {
+      const t = (scrollProgress - 0.85) / 0.15;
+      tx = 70 + t * 100;
+      ty = 15 - t * 12;
+      tz = 35 - t * 12;
+    }
+    tx += Math.sin(elapsed * 0.12) * 6;
+    ty += Math.sin(elapsed * 0.15) * 4;
+    
+    camera.position.x += (tx - camera.position.x) * 0.04;
+    camera.position.y += (ty - camera.position.y) * 0.04;
+    camera.position.z += (tz - camera.position.z) * 0.04;
+    camera.lookAt(0, 0, 0);
+    
+    // Day/Night transition
+    const dayBg = new THREE.Color(0x0a1a3a);
+    const nightBg = new THREE.Color(0x02040c);
+    scene.background = dayBg.clone().lerp(nightBg, scrollProgress);
+    
+    // Sun/Moon visibility
+    const sunOp = Math.max(0, 1 - scrollProgress * 2.2);
+    sunMat.emissiveIntensity = 3.0 * sunOp;
+    sunMat.opacity = sunOp;
+    sunMat.transparent = true;
+    sun.visible = sunOp > 0.05;
+    
+    const moonOp = Math.max(0, (scrollProgress - 0.55) * 2.2);
+    moonMat.opacity = Math.min(1, moonOp);
+    moonMat.transparent = true;
+    moon.visible = moonOp > 0.05;
+    
+    sunLight.intensity = 3.0 * sunOp;
+    
+    // Ambient
+    const ambDay = new THREE.Color(0x404060);
+    const ambNight = new THREE.Color(0x101018);
+    scene.children.forEach(c => {
+      if (c.isAmbientLight) {
+        c.color = ambDay.clone().lerp(ambNight, scrollProgress);
+        c.intensity = 0.7 - scrollProgress * 0.55;
+      }
+    });
+    
+    renderer.render(scene, camera);
+  }
+  
+  animate();
+})();
+
+/* ===== ORIGINAL WEBSITE SCRIPT (unchanged functionality) ===== */
+/* Note: The original script has been preserved in full below. */
+</script>
+
+<script>
+/* ===== ORIGINAL WEBSITE LOGIC ===== */
+const FIREBASE_CONFIG={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT_ID",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"YOUR_SENDER_ID",appId:"YOUR_APP_ID"};
+const FB_VER="10.12.2";
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const empty=t=>`<div class="empty">${t}</div>`;
+const fmt=d=>new Date(d+'T00:00').toLocaleDateString('en',{day:'numeric',month:'short',year:'numeric'});
+const store={get(k,d){try{const v=localStorage.getItem('itra_'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('itra_'+k,JSON.stringify(v))}catch(e){}}};
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3200)}
+
+const GR={ye:'Young Explorers 6–10',fc:'Future Creators 11–14',yi:'Young Innovators 15–18',ad:'Advanced',ed:'Educators',co:'Community'};
+const COURSES=[
+{id:'c1',g:'ye',t:'Computer Basics & Safe Internet',lv:'Beginner',dur:'4 weeks',pre:'None',d:'Meet the computer, type, draw and learn to stay safe online.',sk:['Digital literacy','Safety']},
+{id:'c2',g:'ye',t:'Scratch Logic Games',lv:'Beginner',dur:'6 weeks',pre:'Computer basics',d:'Build your own games with blocks and learn how to think like a coder.',sk:['Scratch','Logic']},
+{id:'c3',g:'fc',t:'My First Website: HTML & CSS',lv:'Beginner',dur:'6 weeks',pre:'Basic typing',d:'Design and publish a personal web page.',sk:['HTML','CSS','Design']},
+{id:'c4',g:'fc',t:'Python Fundamentals',lv:'Beginner',dur:'8 weeks',pre:'Logic basics',d:'Variables, loops and functions through small fun projects.',sk:['Python','Problem solving']},
+{id:'c5',g:'fc',t:'Robotics with Arduino',lv:'Beginner',dur:'8 weeks',pre:'None',d:'Wire LEDs, buttons and motors and program your first robot.',sk:['Arduino','Electronics','Robotics']},
+{id:'c6',g:'yi',t:'Web Development with JavaScript',lv:'Intermediate',dur:'10 weeks',pre:'HTML & CSS',d:'Build interactive, responsive web apps and publish them.',sk:['JavaScript','APIs','Responsive']},
+{id:'c7',g:'yi',t:'IoT with ESP32',lv:'Intermediate',dur:'8 weeks',pre:'Arduino basics',d:'Connect sensors to the internet for smart agriculture ideas.',sk:['ESP32','Sensors','IoT']},
+{id:'c8',g:'yi',t:'Git, Teamwork & Cyber Safety',lv:'Intermediate',dur:'5 weeks',pre:'Any coding',d:'Collaborate with Git and learn defensive security habits.',sk:['Git','Security basics']},
+{id:'c9',g:'ad',t:'AI & Machine Learning Foundations',lv:'Advanced',dur:'12 weeks',pre:'Python',d:'Data analysis and your first machine learning projects, with responsible AI.',sk:['ML','Data','Ethics']},
+{id:'c10',g:'ad',t:'Embedded Systems & Advanced Robotics',lv:'Advanced',dur:'12 weeks',pre:'Arduino, C/C++',d:'Autonomous robots, control systems and simulation.',sk:['Embedded','Control','CAD']},
+{id:'c11',g:'ed',t:'AI & Digital Tools for Teachers',lv:'Beginner',dur:'4 weeks',pre:'None',d:'Use digital classroom tools and AI to teach STEM and create resources.',sk:['EdTech','Content creation']},
+{id:'c12',g:'co',t:'Everyday Digital Skills',lv:'Beginner',dur:'4 weeks',pre:'None',d:'Smartphone skills, email, online safety, mobile money and CV writing.',sk:['Email','CV','Digital finance']}];
+const DEPS=[
+['</>','Software Development & Coding','Web, mobile, APIs, databases and open-source.',['Frontend','Backend','Mobile','APIs'],['Weekly code clinics','Open-source sprints']],
+['⚙','Robotics & Automation','Arduino, ESP32, Raspberry Pi, sensors and smart machines.',['Arduino','Sensors','Motors','Robot design'],['Robot build nights','Line-follower races']],
+['⚡','Electronics & Electrical','Circuits, embedded systems, prototypes and device repair.',['Circuits','Embedded','Repair'],['Repair cafés','PCB basics']],
+['◈','AI & Data Science','Machine learning, data analysis and responsible AI.',['ML','Data','AI tools'],['Study circles','Kinyarwanda NLP ideas']],
+['△','Engineering & Design','CAD, 3D modelling, fabrication and prototyping.',['CAD','3D printing','Prototyping'],['Design sprints','Fabrication demos']],
+['▣','Digital Education & ICT','Digital literacy, e-learning and teacher empowerment.',['ICT teaching','E-learning','Curriculum'],['Teacher labs','Digital classroom tools']],
+['⛨','Cybersecurity & Networking','Defensive security, privacy and network administration.',['Networks','Privacy','Defence'],['Safety workshops','Network labs']],
+['✦','Creative Tech & Media','UI/UX, animation, video and digital storytelling.',['UI/UX','Video','Creative code'],['Design jams','Showcase nights']],
+['◎','Emerging Technologies','IoT, drones, smart agriculture, AR/VR and renewable energy.',['IoT','Drones','AR/VR'],['Smart farm pilots','Drone demos']],
+['↗','Innovation & Entrepreneurship','Startups, research, product strategy and technical writing.',['Startups','Research','Pitching'],['Pitch practice','Mentor clinics']]];
+const PATHS=[
+['Web Development',['Digital foundations','HTML','CSS','JavaScript','Advanced dev','Publish a site']],
+['Python & AI',['Python basics','Data structures','Data analysis','AI foundations','ML projects']],
+['Robotics',['Electronics','Microcontrollers','Sensors','Programming','Robot design','Autonomous project']],
+['Cybersecurity',['Digital safety','Networking','Security basics','Defensive tools','Security project']],
+['Engineering & CAD',['Engineering concepts','Design basics','CAD','Prototyping','Testing','Final product']],
+['Digital Educator',['ICT basics','Teaching tech','Digital tools','AI-assisted teaching','Create resources']]];
+const CATS=['Software','AI','Robotics','Education','Engineering','Electronics','Agriculture','Healthcare','Environment','Community','Business','Research'];
+const IDEAS=[
+{id:'i1',t:'Solar-powered school charging station',cat:'Environment',by:'Sample member',v:24,st:'Under review',df:'Medium',pr:'Schools lose lessons when power fails.',sol:'A solar kiosk that charges tablets and laptops.',ts:3},
+{id:'i2',t:'Kinyarwanda reading buddy (AI)',cat:'AI',by:'Sample member',v:41,st:'Team forming',df:'Hard',pr:'Few learning tools exist in Kinyarwanda.',sol:'A voice assistant helping children practise reading.',ts:2},
+{id:'i3',t:'Smart irrigation for school gardens',cat:'Agriculture',by:'Sample member',v:33,st:'In development',df:'Medium',pr:'Gardens dry out during holidays.',sol:'ESP32 soil sensors controlling a small pump.',ts:1},
+{id:'i4',t:'Offline digital library box',cat:'Education',by:'Sample member',v:18,st:'Submitted',df:'Easy',pr:'Many villages lack internet.',sol:'A Raspberry Pi hotspot hosting open textbooks.',ts:0}];
+const PROJ=[
+{id:'p1',t:'Smart School Irrigation',dept:'Robotics & Automation',lead:'Team lead (sample)',desc:'Soil-moisture sensing and automatic watering for school gardens.',tasks:[['Source sensors','To Do','Med'],['Wire ESP32 prototype','In Progress','High'],['Review circuit design','Under Review','Med'],['Field test at garden','Testing','High'],['Define requirements','Completed','Low']]},
+{id:'p2',t:'Kinyarwanda Learning Assistant',dept:'AI & Data Science',lead:'Team lead (sample)',desc:'A learning assistant prototype for primary-school reading.',tasks:[['Collect open text corpus','To Do','High'],['Design chat interface','In Progress','Med'],['Review ethics checklist','Under Review','High'],['Plan pilot class','To Do','Low']]}];
+const COLS=['To Do','In Progress','Under Review','Testing','Completed'];
+const EV=[
+{id:'e1',t:'Robotics Build Night',ty:'Workshop',date:'2026-11-28',loc:'TTC Muhanga lab',cap:40},
+{id:'e2',t:'General Community Meeting',ty:'Meeting',date:'2026-12-05',loc:'Main hall',cap:120},
+{id:'e3',t:'Future Innovators Hackathon',ty:'Hackathon',date:'2026-12-12',loc:'TTC Muhanga',cap:80},
+{id:'e4',t:'Tech Talk: AI for Education',ty:'Online session',date:'2026-12-19',loc:'Online',cap:200},
+{id:'e5',t:'Teacher Empowerment Training',ty:'Training',date:'2027-01-09',loc:'Muhanga',cap:60}];
+const RES=[
+['Arduino Starter Handbook','PDF','English','Open licence'],['Python for Beginners','Tutorial','English','Open licence'],['Ibyibanze bya mudasobwa','Tutorial','Kinyarwanda','Community authored'],['Intro to Circuits (video series)','Video','English','Open licence'],['Safe Internet Guide for Kids','PDF','French','Open licence'],['Git Cheat Sheet','Template','English','Open licence'],['Smart Agriculture Primer','Research paper','English','Open access'],['Misingi ya Roboti','Tutorial','Swahili','Community authored']];
+const OPPS=[
+['Tech Scholarship Programme','Scholarship','Partner organisation','2027-01-31','Secondary & TVET learners'],['Junior Developer Internship','Internship','Local tech company','2026-12-20','Students with a portfolio'],['Robotics Competition','Competition','Education network','2026-12-30','Teams of 2–4'],['Teacher Digital Fellowship','Fellowship','Education NGO','2027-02-15','Active teachers'],['Community Tech Volunteer','Volunteer','Academy','2027-03-01','Anyone 18+'],['Research Assistant Call','Research','University partner','2027-01-15','Advanced learners']];
+const MEMS=[
+['Aline M.','Mentor','Robotics, Arduino','Robotics'],['Eric K.','Builder','Web, Firebase','Software'],['Grace U.','Mentor','Teaching, ICT','Education'],['Jean P.','Contributor','AI, Python','AI'],['Diane N.','Learner','Design, Scratch','Creative'],['Patrick H.','Builder','Electronics, IoT','Electronics']];
+const RSCH=[
+['Low-cost soil sensing for school gardens','Agriculture','In progress','Can inexpensive ESP32 sensors give reliable moisture readings for schools?'],['Kinyarwanda speech data for learning apps','AI','Planning','What open data exists to train child-friendly voice tools?'],['Offline-first e-learning in rural schools','Education','Draft report','How well do Raspberry Pi servers work without internet?']];
+const CYC=[['Discover','Find your talents and curiosity.'],['Learn','Build skills through practical courses.'],['Collaborate','Join teams and share knowledge.'],['Build','Turn ideas into real prototypes.'],['Teach','Mentor others and pass skills on.'],['Transform','Use technology to improve communities.']];
+const VALS=['Innovation','Collaboration','Education','Integrity','Inclusion','Creativity','Responsibility','Community service','Excellence','Curiosity','Sustainability'];
+const CHAN=['General','Software','Robotics','AI & Data','Electronics','Engineering','Education','Cybersecurity','Creative Tech','Research','Opportunities','Outreach'];
+const IMP=[['Learners reached',1250],['Schools visited',18],['Workshops',64],['Projects completed',12],['Mentors involved',27],['Resources created',90]];
+const NAV=[['home','home'],['about','about'],['departments','dep'],['learning','learn'],['ideas','ideas'],['projects','proj'],['community','comm'],['events','ev'],['resources','res'],['outreach','out'],['research','rsch'],['opportunities','opp'],['join','join']];
+const T={
+en:{home:'Home',about:'About',dep:'Departments',learn:'Learning',ideas:'Idea Vault',proj:'Projects',comm:'Community',ev:'Events',res:'Resources',out:'Outreach',rsch:'Research',opp:'Opportunities',join:'Join',tag:'Think. Learn. Build. Teach. Transform.',hero:'Where talent meets technology, and ideas become reality.'},
+fr:{home:'Accueil',about:'À propos',dep:'Départements',learn:'Apprendre',ideas:'Idées',proj:'Projets',comm:'Communauté',ev:'Événements',res:'Ressources',out:'Rayonnement',rsch:'Recherche',opp:'Opportunités',join:'Rejoindre',tag:'Pensez. Apprenez. Créez. Enseignez. Transformez.',hero:'Là où le talent rencontre la technologie, et où les idées deviennent réalité.'},
+rw:{home:'Ahabanza',about:'Abo turi bo',dep:'Amashami',learn:'Kwiga',ideas:'Ibitekerezo',proj:'Imishinga',comm:'Umuryango',ev:'Ibikorwa',res:'Ibikoresho',out:'Ubukangurambaga',rsch:'Ubushakashatsi',opp:'Amahirwe',join:'Iyunge natwe',tag:'Tekereza. Kwiga. Kubaka. Kwigisha. Guhindura.',hero:"Aho impano ihurira n'ikoranabuhanga, ibitekerezo bikaba impamo."},
+sw:{home:'Nyumbani',about:'Kuhusu',dep:'Idara',learn:'Jifunze',ideas:'Mawazo',proj:'Miradi',comm:'Jamii',ev:'Matukio',res:'Rasilimali',out:'Uhamasishaji',rsch:'Utafiti',opp:'Fursa',join:'Jiunge',tag:'Fikiri. Jifunze. Jenga. Fundisha. Badilisha.',hero:'Mahali ambapo kipaji hukutana na teknolojia, na mawazo huwa ukweli.'}};
+
+const defTasks=()=>Object.fromEntries(PROJ.map(p=>[p.id,p.tasks.map((t,i)=>({id:p.id+'t'+i,t:t[0],c:COLS.indexOf(t[1]),pr:t[2],who:'Unassigned'}))]));
+let S=Object.assign({user:null,enr:{},ps:{},ideas:[],votes:{},tasks:defTasks(),rsvp:{},myEv:[],fav:[],bm:[],notifs:[
+{id:'n1',t:'Welcome to the academy (sample notification)',r:0},{id:'n2',t:'New lesson available in Python Fundamentals (sample)',r:0},{id:'n3',t:'Hackathon registration is open (sample)',r:0}],lang:'en',cg:'all',pj:'p1'},store.get('s',{}));
+const save=()=>store.set('s',S);
+
+const DB={ready:false,fs:null,au:null,cloudIdeas:[],
+ cfgOk(){return FIREBASE_CONFIG.apiKey&&!/YOUR_/.test(FIREBASE_CONFIG.apiKey)&&!/YOUR_/.test(FIREBASE_CONFIG.projectId)},
+ js(src){return new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=no;document.head.appendChild(s)})},
+ async init(){
+  if(!this.cfgOk()){setMode(false);return}
+  try{
+   const b=`https://www.gstatic.com/firebasejs/${FB_VER}/firebase-`;
+   await this.js(b+'app-compat.js');await Promise.all([this.js(b+'auth-compat.js'),this.js(b+'firestore-compat.js')]);
+   if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+   this.au=firebase.auth();this.fs=firebase.firestore();this.ready=true;setMode(true);
+   this.au.onAuthStateChanged(u=>{S.user=u?{uid:u.uid,name:u.displayName||(u.email||'Member').split('@')[0],email:u.email}:null;save();rAuth();if(u)this.put('users',u.uid,{name:S.user.name,email:u.email,lastLogin:Date.now()})});
+   this.loadIdeas();
+  }catch(e){console.warn('Firebase unavailable, using demo mode',e);this.ready=false;setMode(false,true)}},
+ async add(c,d){if(!this.ready)return false;try{await this.fs.collection(c).add({...d,uid:S.user?.uid||null,createdAt:firebase.firestore.FieldValue.serverTimestamp()});return true}catch(e){console.warn(c,e);toast('Saved on this device only (cloud write was refused)');return false}},
+ async put(c,id,d){if(!this.ready)return;try{await this.fs.collection(c).doc(id).set({...d,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}catch(e){console.warn(c,e)}},
+ async loadIdeas(){try{const q=await this.fs.collection('ideas').orderBy('createdAt','desc').limit(30).get();this.cloudIdeas=q.docs.map(d=>({id:'f'+d.id,...d.data(),v:d.data().v||0,by:'Member',st:d.data().st||'Submitted'}));rIdeas()}catch(e){console.warn('ideas read',e)}}};
+function setMode(on,err){const m=$('#mode');if(!m)return;m.textContent=on?'Cloud connected (Firebase)':err?'Demo mode (Firebase failed to load)':'Demo mode: data stays on this device';m.className='pill'+(on?' ok':'')}
+function needUser(){if(DB.ready&&!S.user){toast('Please log in first');openAuth('in');return false}return true}
+
+const dlg=$('#dlg'),X='<button class="x" data-act="close" aria-label="Close">✕</button>';
+function openDlg(h,cls=''){dlg.className=cls;dlg.innerHTML=`<div class="sheet">${X}${h}</div>`;if(!dlg.open)dlg.showModal();document.documentElement.style.overflow='hidden';applyLang()}
+dlg.addEventListener('close',()=>{document.documentElement.style.overflow=''});
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+function applyLang(){const l=T[S.lang]?S.lang:'en';document.documentElement.lang=l;$$('[data-i]').forEach(e=>{e.textContent=T[l][e.dataset.i]||T.en[e.dataset.i]});const le=$('#lang');if(le)le.value=l}
+
+const chips=(el,list,key,all='All')=>{el.innerHTML=[['all',all],...list].map(([k,v])=>`<button class="chip" aria-pressed="${S[key]===k}" data-act="chip" data-key="${key}" data-id="${k}">${v}</button>`).join('')};
+function rNav(){const tn=$('#topnav');if(!tn)return;tn.innerHTML=['about','departments','learning','ideas','projects','events'].map(id=>`<a href="#${id}" data-sec="${id}" data-i="${NAV.find(n=>n[0]===id)[1]}"></a>`).join('')}
+function rAbout(){const cy=$('#cyc');if(!cy)return;cy.innerHTML=CYC.map((c,i)=>`<button aria-pressed="${(S.cy||0)===i}" data-act="cy" data-id="${i}">${c[0].toUpperCase()}</button>`).join('');const c=CYC[S.cy||0];$('#cyd').innerHTML=`<h3>${c[0]}</h3><p class="m">${c[1]}</p>`;$('#vals').innerHTML=VALS.map(v=>`<span>${v}</span>`).join('')}
+function rDeps(){const de=$('#deps');if(!de)return;de.innerHTML=DEPS.map((d,i)=>`<button class="card" data-act="dept" data-id="${i}"><div class="dg" aria-hidden="true">${esc(d[0])}</div><h3>${String(i+1).padStart(2,'0')} · ${d[1]}</h3><p class="m">${d[2]}</p></button>`).join('')}
+function rCourses(){const cq=$('#cq'),cg=$('#cg'),cl=$('#clist');if(!cq||!cl)return;
+ const q=cq.value.toLowerCase(),g=S.cg;chips(cg,Object.entries(GR),'cg','All groups');
+ cl.innerHTML=COURSES.filter(c=>(g==='all'||c.g===g)&&(c.t+' '+c.sk.join(' ')).toLowerCase().includes(q)).map(c=>{const p=S.enr[c.id],st=p==null?'avail':p>=100?'done':'enr';
+ return `<article class="card"><div class="row"><span class="pill">${GR[c.g]}</span><span class="pill ${st}">${{avail:'Available',enr:'Enrolled',done:'Completed'}[st]}</span></div><h3>${c.t}</h3><p class="m">${c.d}</p><p class="m s">${c.dur} · ${c.lv} · Prerequisite: ${c.pre}</p><div class="tags">${c.sk.map(s=>`<span>${s}</span>`).join('')}</div>${p!=null?`<div class="bar" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="width:${p}%"></i></div>`:''}<div class="row"><button class="btn p sm" data-act="${st==='avail'?'enroll':'step'}" data-id="${c.id}" ${st==='done'?'disabled':''}>${st==='avail'?'Enroll':st==='enr'?'Continue (+25%)':'Certificate after approval'}</button></div></article>`}).join('')||empty('No courses match your search.')}
+function rPaths(){const pa=$('#paths');if(!pa)return;pa.innerHTML=PATHS.map((p,pi)=>{const d=S.ps[pi]||[],pc=Math.round(d.length/p[1].length*100);return `<article class="card"><div class="row"><h3 style="margin:0">${p[0]}</h3>${pc===100?'<span class="pill ok">Badge earned</span>':`<span class="pill">${pc}%</span>`}</div><div class="bar"><i style="width:${pc}%"></i></div><div class="steps">${p[1].map((s,si)=>`<button class="chip" aria-pressed="${d.includes(si)}" data-act="path" data-id="${pi}" data-s="${si}">${s}</button>`).join('')}</div></article>`}).join('')}
+const allIdeas=()=>[...S.ideas,...DB.cloudIdeas,...IDEAS];
+function rIdeas(){const il=$('#ilist');if(!il)return;const sel=$('#ic');if(sel&&!sel.options.length)sel.innerHTML='<option value="all">All categories</option>'+CATS.map(c=>`<option>${c}</option>`).join('');
+ const q=$('#iq')?$('#iq').value.toLowerCase():'',c=sel?sel.value:'all',vote=i=>i.v+(S.votes[i.id]?1:0);let l=allIdeas().filter(i=>(c==='all'||i.cat===c)&&(i.t+' '+i.pr).toLowerCase().includes(q));
+ const so=$('#is');if(so&&so.value==='top')l.sort((a,b)=>vote(b)-vote(a));
+ il.innerHTML=l.map(i=>`<article class="card"><div class="row"><span class="pill">${esc(i.cat)}</span><span class="pill">${esc(i.st)}</span></div><h3>${esc(i.t)}</h3><p class="m">${esc(i.pr)}</p><p class="m s">Difficulty: ${esc(i.df)} · by ${esc(i.by)}</p><div class="row"><button class="btn sm" data-act="vote" data-id="${i.id}" aria-pressed="${!!S.votes[i.id]}">${S.votes[i.id]?'▲ Supported':'△ Support'} · ${vote(i)}</button><button class="btn sm" data-act="joinidea" data-id="${i.id}">Offer skills</button></div></article>`).join('')||empty('No ideas yet. Be the first to submit one!')}
+function rBoard(){const bo=$('#board');if(!bo)return;const P=PROJ.find(p=>p.id===S.pj),T_=S.tasks[P.id]||[],done=T_.filter(t=>t.c===4).length,pc=T_.length?Math.round(done/T_.length*100):0;
+ $('#psel').innerHTML=PROJ.map(p=>`<button class="chip" aria-pressed="${p.id===S.pj}" data-act="proj" data-id="${p.id}">${p.t}</button>`).join('');
+ $('#pinfo').innerHTML=`<h3 style="margin-top:0">${P.t}</h3><p class="m">${P.desc}</p><p class="m s">Department: ${P.dept} · Leader: ${P.lead} · Progress ${pc}%</p><div class="bar"><i style="width:${pc}%"></i></div>`;
+ bo.innerHTML=COLS.map((c,ci)=>`<div class="col" role="group" aria-label="${c}"><h4>${c} (${T_.filter(t=>t.c===ci).length})</h4>${T_.filter(t=>t.c===ci).map(t=>`<div class="tk"><b>${esc(t.t)}</b><div class="m s">${esc(t.who)} · <span class="${{High:'hi',Med:'md',Low:'lo'}[t.pr]}">${t.pr}</span></div><div class="row"><button class="btn sm" data-act="mv" data-id="${t.id}" data-d="-1" aria-label="Move left" ${ci?'':'disabled'}>←</button><button class="btn sm" data-act="mv" data-id="${t.id}" data-d="1" aria-label="Move right" ${ci<4?'':'disabled'}>→</button></div></div>`).join('')}</div>`).join('')}
+let cm=new Date();cm.setDate(1);
+const allEv=()=>[...EV,...S.myEv].sort((a,b)=>a.date.localeCompare(b.date));
+function rEvents(){const ca=$('#cal'),evl=$('#evl');if(!ca||!evl)return;const y=cm.getFullYear(),m=cm.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),mk={};
+ allEv().forEach(e=>{const d=new Date(e.date+'T00:00');if(d.getFullYear()===y&&d.getMonth()===m)(mk[d.getDate()]=mk[d.getDate()]||[]).push(e.t)});
+ ca.innerHTML=['M','T','W','T','F','S','S'].map(d=>`<b>${d}</b>`).join('')+'<i></i>'.repeat(first)+Array.from({length:n},(_,i)=>`<span class="${mk[i+1]?'ev':''}" ${mk[i+1]?`title="${esc(mk[i+1].join(', '))}"`:''}>${i+1}</span>`).join('');
+ $('#calt').textContent=cm.toLocaleDateString('en',{month:'long',year:'numeric'});
+ evl.innerHTML=allEv().map(e=>{const d=new Date(e.date+'T00:00'),r=S.rsvp[e.id];return `<article class="card ev-i"><div class="ev-d">${d.getDate()}<small>${d.toLocaleDateString('en',{month:'short'}).toUpperCase()}</small></div><div><span class="pill">${esc(e.ty)}</span><h3 style="margin:6px 0 2px">${esc(e.t)}</h3><p class="m s">${esc(e.loc)} · capacity ${e.cap}</p></div><button class="btn sm ${r?'':'p'}" data-act="rsvp" data-id="${e.id}">${r?'Registered ✓':'RSVP'}</button></article>`}).join('')}
+function rRes(){const rl=$('#rl');if(!rl)return;const sel=$('#rt');if(sel&&!sel.options.length)sel.innerHTML='<option value="all">All types</option>'+[...new Set(RES.map(r=>r[1]))].map(t=>`<option>${t}</option>`).join('');
+ const q=$('#rq')?$('#rq').value.toLowerCase():'';rl.innerHTML=RES.map((r,i)=>[r,i]).filter(([r])=>(sel&&sel.value==='all'||r[1]===sel?.value||true)&&r[0].toLowerCase().includes(q)).map(([r,i])=>`<article class="card"><div class="row"><span class="pill">${r[1]}</span><span class="pill">${r[2]}</span></div><h3>${r[0]}</h3><p class="m s">${r[3]}</p><div class="row"><button class="btn sm" data-act="fav" data-id="${i}">${S.fav.includes(i)?'★ Saved':'☆ Save'}</button><button class="btn sm" data-act="share" data-t="${esc(r[0])}">Share</button></div></article>`).join('')||empty('No resources found.')}
+function rOpp(){const op=$('#op');if(!op)return;op.innerHTML=OPPS.map((o,i)=>`<article class="card"><div class="row"><span class="pill">${o[1]}</span><span class="pill">Deadline ${fmt(o[3])}</span></div><h3>${o[0]}</h3><p class="m">${o[2]}</p><p class="m s">Eligibility: ${o[4]}</p><div class="row"><button class="btn sm" data-act="bm" data-id="${i}">${S.bm.includes(i)?'🔖 Bookmarked':'Bookmark'}</button><button class="btn sm" data-act="share" data-t="${esc(o[0])}">Share</button></div></article>`).join('')}
+function rStatic(){const ch=$('#chan'),me=$('#mem'),rs=$('#rs'),im=$('#imp'),ou=$('#outp');if(ch)ch.innerHTML=CHAN.map(c=>`<span>#${c}</span>`).join('');
+ if(me)me.innerHTML=MEMS.map((m,i)=>`<article class="card"><div class="row"><div class="dg" aria-hidden="true">${m[0][0]}</div><span class="pill ${m[1]==='Mentor'?'ok':''}">${m[1]}</span></div><h3>${m[0]}</h3><p class="m s">${m[3]} · ${m[2]}</p><div class="row"><button class="btn sm" data-act="connect" data-id="${i}">${m[1]==='Mentor'?'Request mentorship':'Connect'}</button></div></article>`).join('');
+ if(rs)rs.innerHTML=RSCH.map((r,i)=>`<button class="card" data-act="rsch" data-id="${i}"><div class="row"><span class="pill">${r[1]}</span><span class="pill">${r[2]}</span></div><h3>${r[0]}</h3><p class="m s">Tap to read the research question</p></button>`).join('');
+ if(im)im.innerHTML=IMP.map(i=>`<div class="card"><b data-n="${i[1]}">0</b><span class="m s">${i[0]}</span></div>`).join('');
+ if(ou)ou.innerHTML=['School technology visits','Digital literacy','Robotics for children','Teacher empowerment','Local-language content','Accessibility solutions','Community workshops'].map(x=>`<span>${x}</span>`).join('')}
+function rJoin(done){
+ const u=S.user||{},jb=$('#jbox');if(!jb)return;
+ if(done){const rec=done.map(i=>DEPS[i][1]);jb.innerHTML=`<h3 style="margin-top:0">Application received 🎉</h3><p class="m">${DB.ready?'Saved to our database for review.':'Demo mode: your application was kept on this device only. Connect Firebase to send real applications.'}</p><p style="margin-top:12px"><b>Suggested departments:</b></p><div class="tags">${rec.map(r=>`<span>${r}</span>`).join('')||'<span>Explore any department!</span>'}</div><div class="row"><a class="btn p" href="#learning">Browse courses</a><a class="btn" href="#events">See events</a></div>`;return}
+ jb.innerHTML=`<form data-form="join" novalidate><div class="two"><div><label for="jn">Full name *</label><input id="jn" name="name" autocomplete="name" value="${esc(u.name)}" required><label for="je">Email *</label><input id="je" name="email" type="email" autocomplete="email" value="${esc(u.email)}" required><label for="ji">School, institution or community</label><input id="ji" name="inst"><label for="ja">Age group</label><select id="ja" name="age"><option>Under 13 (parent/teacher supervised)</option><option>13–17</option><option>18–25</option><option>26+</option></select></div>
+ <div><label>Interests (department)</label><div class="tags" style="gap:8px">${DEPS.map((d,i)=>`<label class="chk"><input type="checkbox" name="int" value="${i}"> ${d[1].split(' & ')[0]}</label>`).join('')}</div><label for="jl">Experience level</label><select id="jl" name="lv"><option>Explorer</option><option>Learner</option><option>Contributor</option><option>Builder</option><option>Mentor</option></select></div></div>
+ <label for="jm">Why do you want to join?</label><textarea id="jm" name="why"></textarea><label class="chk" style="margin-top:14px"><input type="checkbox" name="coc" required> I agree to the community code of conduct *</label><p class="m s" id="jerr" role="alert" style="color:#fb7185;margin-top:8px"></p><button class="btn p" style="margin-top:8px">Submit application</button></form>`}
+
+function rAuth(){const b=$('#authbtn');if(!b)return;if(S.user){b.textContent=S.user.name.slice(0,12);b.dataset.act='dash'}else{b.textContent='Log in';b.dataset.act='auth'}if(!$('#jn')?.value&&$('#jn')&&S.user){rJoin()}}
+function openAuth(mode='in'){const up=mode==='up';openDlg(`<h2>${up?'Create your account':'Welcome back'}</h2><p class="m s">${DB.ready?'Secure sign-in powered by Firebase.':'Demo mode: Firebase is not configured yet, so this creates a local demo session only. No real account is created.'}</p>
+ <form data-form="auth" data-mode="${mode}">${up?'<label for="an">Name</label><input id="an" name="name" autocomplete="name" required>':''}<label for="ae">Email</label><input id="ae" name="email" type="email" autocomplete="email" required><label for="ap">Password</label><input id="ap" name="pw" type="password" minlength="6" autocomplete="${up?'new':'current'}-password" required><p class="m s" id="aerr" role="alert" style="color:#fb7185;margin-top:8px"></p>
+ <div class="row"><button class="btn p">${up?'Sign up':'Log in'}</button><button type="button" class="btn" data-act="google">Continue with Google</button></div></form>
+ <div class="row"><button class="btn sm" data-act="auth" data-id="${up?'in':'up'}">${up?'I have an account':'Create an account'}</button>${up?'':'<button class="btn sm" data-act="reset">Forgot password?</button>'}</div>`)}
+const AERR={'auth/invalid-credential':'Wrong email or password.','auth/user-not-found':'No account with that email.','auth/wrong-password':'Wrong email or password.','auth/email-already-in-use':'That email is already registered.','auth/weak-password':'Password must be at least 6 characters.','auth/invalid-email':'Enter a valid email.','auth/popup-closed-by-user':'Sign-in cancelled.','auth/network-request-failed':'Network problem. Try again.','auth/operation-not-allowed':'This sign-in method is not enabled in Firebase.','auth/unauthorized-domain':'Add this domain in Firebase Auth settings.'};
+function openDash(){if(!S.user){openAuth('in');return}const en=COURSES.filter(c=>S.enr[c.id]!=null),ev=allEv().filter(e=>S.rsvp[e.id]),tk=Object.values(S.tasks).flat().filter(t=>t.c<4).length;
+ openDlg(`<h2>Hello, ${esc(S.user.name)} 👋</h2><p class="m s">${DB.ready?'Signed in with Firebase.':'Demo session (not a real account).'}</p>
+ <div class="stats"><div class="card"><b>${en.length}</b><span class="m s">Courses</span></div><div class="card"><b>${ev.length}</b><span class="m s">Events</span></div><div class="card"><b>${tk}</b><span class="m s">Open tasks</span></div></div>
+ <h3>My learning</h3>${en.map(c=>`<p class="m">${c.t} — ${S.enr[c.id]}%</p><div class="bar"><i style="width:${S.enr[c.id]}%"></i></div>`).join('')||'<p class="m">No courses yet. Browse the Learning Hub.</p>'}
+ <h3>Quick actions</h3><div class="tags" style="gap:8px"><button class="btn sm" data-act="idea-new">Submit an idea</button><a class="btn sm" href="#learning" data-act="close">Browse courses</a><button class="btn sm" data-act="mtg-new">Schedule a meeting</button><a class="btn sm" href="#community" data-act="close">Find a mentor</a><a class="btn sm" href="#events" data-act="close">Join a challenge</a></div>
+ <div class="row" style="margin-top:20px"><span></span><button class="btn sm" data-act="logout">Log out</button></div>`)}
+function openSearch(){const rec=store.get('rec',[]);openDlg(`<h2 style="font-size:1.2rem">Search</h2><input id="sq" type="search" placeholder="Courses, ideas, events, members…" aria-label="Search" autocomplete="off"><div class="res" id="sr">${rec.length?'<p class="m s" style="margin-top:12px">Recent</p>'+rec.map(r=>`<button data-act="rs" data-id="${esc(r)}">${esc(r)}</button>`).join(''):'<p class="m s" style="margin-top:12px">Type to search the whole academy.</p>'}</div>`,'search');const sq=$('#sq');if(sq){sq.focus();sq.addEventListener('input',e=>doSearch(e.target.value))}}
+function doSearch(v){const q=v.trim().toLowerCase(),box=$('#sr');if(!box)return;if(!q){box.innerHTML='';return}
+ const ix=[...COURSES.map(c=>[c.t,'Course','learning']),...DEPS.map(d=>[d[1],'Department','departments']),...allIdeas().map(i=>[i.t,'Idea','ideas']),...allEv().map(e=>[e.t,'Event','events']),...RES.map(r=>[r[0],'Resource','resources']),...OPPS.map(o=>[o[0],'Opportunity','opportunities']),...MEMS.map(m=>[m[0]+' — '+m[2],'Member','community']),...RSCH.map(r=>[r[0],'Research','research']),...PROJ.map(p=>[p.t,'Project','projects'])].filter(r=>r[0].toLowerCase().includes(q)).slice(0,12);
+ box.innerHTML=ix.map(r=>`<a href="#${r[2]}" data-act="close" data-q="${esc(v)}"><b>${esc(r[0])}</b><br><span class="m s">${r[1]}</span></a>`).join('')||empty('No results. Try another word.')}
+function openNotif(){const n=S.notifs;openDlg(`<h2>Notifications</h2><p class="m s">Sample notifications. Real delivery needs the backend.</p><div class="row" style="margin-bottom:10px"><span></span><button class="btn sm" data-act="readall">Mark all as read</button></div>${n.map(x=>`<div class="ni ${x.r?'':'u'}">${esc(x.t)}</div>`).join('')||empty('You are all caught up.')}`)}
+function badge(){const u=S.notifs.filter(n=>!n.r).length,b=$('#nb');if(!b)return;b.hidden=!u;b.textContent=u}
+function push(t){S.notifs.unshift({id:'n'+Date.now(),t,r:0});save();badge()}
+
+const ACT={
+ close(){if(dlg.open)dlg.close()},
+ menu(){openDlg(`<h2 style="font-size:1.2rem">Menu</h2><nav class="nd" aria-label="All sections">${NAV.map(n=>`<a href="#${n[0]}" data-act="close" data-sec="${n[0]}" data-i="${n[1]}"></a>`).join('')}</nav><label for="l2">Language</label><select id="l2">${['en','fr','rw','sw'].map(l=>`<option value="${l}" ${l===S.lang?'selected':''}>${{en:'English',fr:'Français',rw:'Kinyarwanda',sw:'Kiswahili'}[l]}</option>`).join('')}</select>`,'drawer');const l2=$('#l2');if(l2)l2.onchange=e=>setLang(e.target.value);markNav(secId)},
+ search:openSearch,notif:openNotif,dash:openDash,auth(id){openAuth(id==='up'?'up':'in')},
+ logout(){dlg.close();if(DB.ready)DB.au.signOut();S.user=null;save();rAuth();toast('Logged out')},
+ async google(){if(!DB.ready)return toast('Google sign-in needs Firebase to be configured');try{await DB.au.signInWithPopup(new firebase.auth.GoogleAuthProvider());dlg.close();toast('Signed in')}catch(e){const ae=$('#aerr');if(ae)ae.textContent=AERR[e.code]||'Google sign-in failed.'}},
+ async reset(){const e=$('#ae').value;if(!e)return toast('Enter your email first');if(!DB.ready)return toast('Password reset needs Firebase to be configured');try{await DB.au.sendPasswordResetEmail(e);toast('Reset email sent (check spam too)')}catch(x){toast(AERR[x.code]||'Could not send reset email')}},
+ readall(){S.notifs.forEach(n=>n.r=1);save();badge();openNotif()},
+ chip(id,b){S[b.dataset.key]=id;save();({cg:rCourses})[b.dataset.key]()},
+ cy(id){S.cy=+id;rAbout()},
+ dept(i){const d=DEPS[i];openDlg(`<div class="dg">${esc(d[0])}</div><h2>${d[1]}</h2><p class="m">${d[2]}</p><h3>Skills</h3><div class="tags">${d[3].map(s=>`<span>${s}</span>`).join('')}</div><h3>Activities</h3><div class="tags">${d[4].map(s=>`<span>${s}</span>`).join('')}</div><p class="m s" style="margin-top:12px">Leader and members are assigned by the academy team.</p><div class="row"><span></span><button class="btn p" data-act="djoin" data-id="${i}">Join department</button></div>`)},
+ djoin(i){if(!needUser())return;DB.add('departmentJoins',{dept:DEPS[i][1]});push('You requested to join '+DEPS[i][1]);dlg.close();toast('Request sent'+(DB.ready?'':' (demo)'))},
+ enroll(id){if(!needUser())return;S.enr[id]=0;save();DB.put('enrollments',(S.user?.uid||'guest')+'_'+id,{courseId:id,progress:0});push('Enrolled in '+COURSES.find(c=>c.id===id).t);rCourses();toast('Enrolled!')},
+ step(id){S.enr[id]=Math.min(100,(S.enr[id]||0)+25);save();DB.put('learningProgress',(S.user?.uid||'guest')+'_'+id,{courseId:id,progress:S.enr[id]});rCourses();if(S.enr[id]>=100)toast('Course completed! Certificate awaits approval.')},
+ path(id,b){const d=S.ps[id]=S.ps[id]||[],s=+b.dataset.s,i=d.indexOf(s);i<0?d.push(s):d.splice(i,1);save();rPaths();if(d.length===PATHS[id][1].length)toast('Path complete: badge earned!')},
+ 'idea-new'(){if(!needUser())return;openDlg(`<h2>Submit an idea</h2><form data-form="idea" novalidate><label for="it">Title *</label><input id="it" name="t" required><label for="ip">Problem *</label><textarea id="ip" name="pr" required></textarea><label for="iso">Proposed solution</label><textarea id="iso" name="sol"></textarea><div class="two"><div><label for="icat">Category</label><select id="icat" name="cat">${CATS.map(c=>`<option>${c}</option>`).join('')}</select></div><div><label for="idf">Difficulty</label><select id="idf" name="df"><option>Easy</option><option>Medium</option><option>Hard</option></select></div></div><label for="isk">Skills needed</label><input id="isk" name="sk"><p class="m s" id="ferr" role="alert" style="color:#fb7185;margin-top:8px"></p><button class="btn p" style="margin-top:8px">Submit idea</button></form>`)},
+ vote(id){S.votes[id]=!S.votes[id];save();rIdeas()},
+ joinidea(id){if(!needUser())return;DB.add('collabRequests',{ideaId:id});toast('Collaboration offer sent'+(DB.ready?'':' (demo)'))},
+ proj(id){S.pj=id;save();rBoard()},
+ mv(id,b){const t=S.tasks[S.pj].find(x=>x.id===id);t.c=Math.max(0,Math.min(4,t.c+ +b.dataset.d));save();DB.put('projectTasks',id,{...t,projectId:S.pj});rBoard()},
+ 'task-add'(){openDlg(`<h2>Add task</h2><form data-form="task" novalidate><label for="tn">Task name *</label><input id="tn" name="t" required><label for="tw">Assignee</label><input id="tw" name="who"><label for="tp">Priority</label><select id="tp" name="pr"><option>High</option><option selected>Med</option><option>Low</option></select><p class="m s" id="ferr" role="alert" style="color:#fb7185;margin-top:8px"></p><button class="btn p" style="margin-top:8px">Add to To Do</button></form>`)},
+ rsvp(id){if(!needUser())return;S.rsvp[id]=!S.rsvp[id];save();DB.put('eventRegistrations',(S.user?.uid||'guest')+'_'+id,{eventId:id,going:!!S.rsvp[id]});rEvents();toast(S.rsvp[id]?'You are registered':'Registration removed')},
+ cal(id){cm.setMonth(cm.getMonth()+ +id);rEvents()},
+ 'mtg-new'(){if(!needUser())return;openDlg(`<h2>Schedule a meeting</h2><form data-form="mtg" novalidate><label for="mt">Title *</label><input id="mt" name="t" required><div class="two"><div><label for="mty">Type</label><select id="mty" name="ty"><option>Meeting</option><option>Workshop</option><option>Training</option><option>Online session</option><option>Hackathon</option></select></div><div><label for="md">Date *</label><input id="md" name="date" type="date" required></div></div><label for="ml">Location or online link</label><input id="ml" name="loc"><label for="mc">Capacity</label><input id="mc" name="cap" type="number" min="1" value="30"><label for="mag">Agenda</label><textarea id="mag" name="ag"></textarea><p class="m s" id="ferr" role="alert" style="color:#fb7185;margin-top:8px"></p><button class="btn p" style="margin-top:8px">Create meeting</button></form>`)},
+ fav(id){const i=S.fav.indexOf(+id);i<0?S.fav.push(+id):S.fav.splice(i,1);save();rRes()},
+ bm(id){const i=S.bm.indexOf(+id);i<0?S.bm.push(+id):S.bm.splice(i,1);save();rOpp()},
+ async share(id,b){const d={title:b.dataset.t,text:b.dataset.t+' — Ikaze Tech & Robotics Academy',url:location.href.split('#')[0]};try{if(navigator.share)await navigator.share(d);else{await navigator.clipboard.writeText(d.url);toast('Link copied')}}catch(e){}},
+ connect(i){if(!needUser())return;DB.add('collabRequests',{member:MEMS[i][0]});toast('Request sent to '+MEMS[i][0]+(DB.ready?'':' (demo)'))},
+ rsch(i){const r=RSCH[i];openDlg(`<span class="pill">${r[1]} · ${r[2]}</span><h2 style="margin-top:10px">${r[0]}</h2><h3>Research question</h3><p class="m">${r[3]}</p><p class="m s" style="margin-top:12px">Full workspaces (methods, data, results, reports) will be managed from the admin dashboard.</p>`)},
+ rs(id){const sq=$('#sq');if(sq){sq.value=id;doSearch(id)}}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(!b)return;const f=ACT[b.dataset.act];if(!f)return;if(b.tagName==='A'&&b.dataset.q){const r=store.get('rec',[]).filter(x=>x!==b.dataset.q);r.unshift(b.dataset.q);store.set('rec',r.slice(0,5))}f(b.dataset.id,b,e)});
+const FORM={
+ async auth(f){const d=Object.fromEntries(new FormData(f)),up=f.dataset.mode==='up',er=$('#aerr');er.textContent='';
+  if(!/^\S+@\S+\.\S+$/.test(d.email))return er.textContent='Enter a valid email.';if((d.pw||'').length<6)return er.textContent='Password must be at least 6 characters.';
+  if(!DB.ready){S.user={name:d.name||d.email.split('@')[0],email:d.email,demo:true};save();rAuth();dlg.close();return toast('Demo session started (no real account)')}
+  try{if(up){const c=await DB.au.createUserWithEmailAndPassword(d.email,d.pw);await c.user.updateProfile({displayName:d.name})}else await DB.au.signInWithEmailAndPassword(d.email,d.pw);dlg.close();toast('Welcome!')}catch(x){er.textContent=AERR[x.code]||'Something went wrong. Try again.'}},
+ async idea(f){const d=Object.fromEntries(new FormData(f));if(!d.t.trim()||!d.pr.trim())return $('#ferr').textContent='Title and problem are required.';
+  const i={id:'u'+Date.now(),t:d.t.trim(),pr:d.pr.trim(),sol:d.sol,cat:d.cat,df:d.df,sk:d.sk,by:S.user?.name||'You (demo)',v:0,st:'Submitted'};S.ideas.unshift(i);save();await DB.add('ideas',{t:i.t,pr:i.pr,sol:i.sol,cat:i.cat,df:i.df,sk:i.sk,st:'Submitted',by:i.by});push('Your idea was submitted: '+i.t);dlg.close();rIdeas();toast(DB.ready?'Idea submitted for review':'Idea added (demo, saved on this device)')},
+ task(f){const d=Object.fromEntries(new FormData(f));if(!d.t.trim())return $('#ferr').textContent='Task name is required.';S.tasks[S.pj].push({id:S.pj+'t'+Date.now(),t:d.t.trim(),who:d.who.trim()||'Unassigned',pr:d.pr,c:0});save();dlg.close();rBoard();toast('Task added')},
+ async mtg(f){const d=Object.fromEntries(new FormData(f));if(!d.t.trim()||!d.date)return $('#ferr').textContent='Title and date are required.';S.myEv.push({id:'m'+Date.now(),t:d.t.trim(),ty:d.ty,date:d.date,loc:d.loc||'TBA',cap:+d.cap||30});save();await DB.add('meetings',{t:d.t,type:d.ty,date:d.date,loc:d.loc,cap:+d.cap,agenda:d.ag});dlg.close();const dt=new Date(d.date+'T00:00');cm=new Date(dt.getFullYear(),dt.getMonth(),1);rEvents();toast('Meeting created'+(DB.ready?'':' (demo)'))},
+ async join(f){const fd=new FormData(f),d=Object.fromEntries(fd),er=$('#jerr');er.textContent='';
+  if(!d.name.trim())return er.textContent='Please enter your name.';if(!/^\S+@\S+\.\S+$/.test(d.email))return er.textContent='Please enter a valid email.';if(!d.coc)return er.textContent='Please agree to the code of conduct.';
+  const ints=fd.getAll('int').map(Number);await DB.add('membershipApplications',{name:d.name,email:d.email,inst:d.inst,age:d.age,level:d.lv,interests:ints.map(i=>DEPS[i][1]),why:d.why,status:'pending'});S.joined=1;save();rJoin(ints)}};
+document.addEventListener('submit',e=>{const f=e.target.closest('form[data-form]');if(f){e.preventDefault();FORM[f.dataset.form](f)}});
+['cq','iq','rq'].forEach(id=>{const el=$('#'+id);if(el)el.addEventListener('input',()=>({cq:rCourses,iq:rIdeas,rq:rRes})[id]())});
+['ic','is','rt'].forEach(id=>{const el=$('#'+id);if(el)el.addEventListener('change',()=>({ic:rIdeas,is:rIdeas,rt:rRes})[id]())});
+function setLang(l){S.lang=l;save();applyLang()}
+const langSel=$('#lang');if(langSel)langSel.addEventListener('change',e=>setLang(e.target.value));
+document.addEventListener('keydown',e=>{const tg=(e.target.tagName||'');if((e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(tg))||((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k')){e.preventDefault();openSearch()}});
+
+function markNav(id){$$('[data-sec]').forEach(a=>a.classList.toggle('on',a.dataset.sec===id))}
+let secId='home';
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){secId=e.target.id;markNav(secId)}}),{rootMargin:'-45% 0px -50% 0px'});
+$$('section[data-world]').forEach(s=>io.observe(s));
+
+/* Initialization */
+rNav();rAbout();rDeps();rCourses();rPaths();rIdeas();rBoard();rEvents();rRes();rOpp();rStatic();rJoin();rAuth();badge();applyLang();
+document.getElementById('yr').textContent=new Date().getFullYear();
+DB.init();
+</script>
+</body>
+</html>

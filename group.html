@@ -1,0 +1,573 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#080b16" />
+  <title>IKAZE NEXUS | Community</title>
+  <link rel="icon" type="image/svg+xml" href="/meet-group-favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:#080b16; --panel:#101629; --panel2:#151d32;
+      --line:rgba(164,183,255,.12); --text:#edf2ff;
+      --muted:#929db8; --cyan:#62e8ff; --blue:#647cff;
+      --violet:#a77cff; --green:#55e6b2; --danger:#ff6e89;
+      --radius:18px; --sidebar:255px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+    .ambient{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.13;animation:float 18s ease-in-out infinite}
+    .orb.one{width:380px;height:380px;background:#415dff;top:-120px;left:15%}
+    .orb.two{width:350px;height:350px;background:#8b43ff;right:-130px;top:35%}
+    .orb.three{width:300px;height:300px;background:#00d5e9;bottom:-140px;left:40%;animation-delay:-6s}
+    @keyframes float{50%{transform:translate(35px,-35px)}}
+    .app{min-height:100vh;display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr)}
+    .sidebar{height:100vh;position:sticky;top:0;border-right:1px solid var(--line);background:rgba(9,13,25,.86);backdrop-filter:blur(18px);padding:22px 16px;display:flex;flex-direction:column;overflow:auto}
+    .brand{display:flex;align-items:center;gap:11px;padding:0 10px 24px}
+    .brandmark{width:42px;height:42px;border-radius:14px;background:linear-gradient(140deg,#59ddff,#7b6dff 70%,#b46cff);display:grid;place-items:center;color:#08101e;font-weight:900;font-family:"Space Grotesk";box-shadow:0 0 28px #557aff44}
+    .brand strong{font-family:"Space Grotesk";letter-spacing:.8px;font-size:14px}
+    .brand small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+    .nav-label{color:#66728f;font-size:10px;letter-spacing:1.7px;text-transform:uppercase;padding:16px 10px 8px}
+    .nav{display:grid;gap:5px}
+    .nav button{border:1px solid transparent;background:transparent;color:#aab5ce;display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;text-align:left;width:100%;transition:.2s}
+    .nav button:hover{background:#ffffff08;color:white}
+    .nav button.active{background:linear-gradient(100deg,#657dff20,#5ae5ff0a);border-color:#6985ff33;color:#eaf2ff}
+    .nav .ico{width:20px;text-align:center;font-size:17px}
+    .nav .count{margin-left:auto;font-size:10px;background:#1d2945;padding:3px 7px;border-radius:20px;color:#a9c0ff}
+    .sidebar-bottom{margin-top:auto;padding-top:18px}
+    .profile-mini{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#ffffff05}
+    .avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#37d5ff,#7866ff);font-weight:700;color:#07101c;flex:none;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover}
+    .profile-mini .name{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .profile-mini .status{font-size:10px;color:var(--green);margin-top:3px}
+    .main{min-width:0;padding:0 30px 40px}
+    .topbar{height:78px;display:flex;align-items:center;justify-content:space-between;gap:15px;border-bottom:1px solid var(--line)}
+    .crumb{font-size:12px;color:var(--muted)} .crumb b{color:#fff}
+    .top-actions{display:flex;align-items:center;gap:10px}
+    .search{position:relative}
+    .search input{width:min(250px,26vw);border:1px solid var(--line);background:#11182a;border-radius:12px;color:white;padding:10px 12px 10px 35px;outline:none}
+    .search span{position:absolute;left:12px;top:10px;color:#73809d}
+    .btn{border:1px solid var(--line);background:#141c2f;color:#e8efff;padding:10px 13px;border-radius:11px;transition:.2s}
+    .btn:hover{border-color:#6d86ff80;transform:translateY(-1px)}
+    .btn.primary{background:linear-gradient(110deg,#657eff,#6970ff);border:0;color:white;font-weight:700}
+    .btn.icon{padding:9px 11px}
+    .hero{padding:26px 0 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+    .eyebrow{color:var(--cyan);font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700}
+    h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0}
+    h1{font-size:clamp(25px,3.2vw,38px);letter-spacing:-1.2px;margin-top:8px}
+    .hero p{color:var(--muted);margin:8px 0 0;font-size:13px;max-width:580px;line-height:1.65}
+    .hero-actions{display:flex;gap:8px;flex-wrap:wrap}
+    .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:12px 0 24px}
+    .stat{background:linear-gradient(145deg,#12192b,#101525);border:1px solid var(--line);border-radius:16px;padding:16px}
+    .stat small{color:var(--muted);font-size:11px}
+    .stat strong{display:block;font-size:23px;font-family:"Space Grotesk";margin-top:8px}
+    .stat .sub{font-size:10px;color:#7788a8;margin-top:4px}
+    .layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}
+    .feed{min-width:0}
+    .section-head{display:flex;align-items:center;justify-content:space-between;margin:4px 0 14px}
+    .section-head h2{font-size:17px}
+    .section-head small{color:var(--muted);font-size:11px}
+    .tabs{display:flex;gap:7px;overflow:auto;padding-bottom:12px}
+    .tab{white-space:nowrap;border:1px solid var(--line);background:#101729;color:#9daac6;padding:8px 12px;border-radius:30px;font-size:11px}
+    .tab.active{color:white;border-color:#7288ff80;background:#536dff25}
+    .composer{border:1px solid var(--line);background:linear-gradient(145deg,#12192b,#101525);border-radius:17px;padding:15px;margin-bottom:14px}
+    .composer-top{display:flex;gap:11px;align-items:center}
+    .composer textarea{width:100%;resize:vertical;min-height:70px;background:transparent;border:0;color:white;outline:none;padding:5px 0}
+    .composer textarea::placeholder{color:#77839e}
+    .composer-foot{border-top:1px solid var(--line);padding-top:11px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .compose-tools{display:flex;gap:7px;flex-wrap:wrap}
+    .tool{border:0;background:#ffffff08;color:#a9b5ce;border-radius:9px;padding:8px 10px;font-size:11px}
+    .post{border:1px solid var(--line);background:linear-gradient(145deg,#12192b,#101525);border-radius:17px;padding:16px;margin-bottom:13px}
+    .post-head{display:flex;align-items:center;gap:10px}
+    .post-author{font-size:12px;font-weight:700}
+    .post-meta{color:var(--muted);font-size:10px;margin-top:3px}
+    .post-tag{margin-left:auto;color:#88a1ff;font-size:10px;background:#647eff18;padding:6px 9px;border-radius:20px}
+    .post-content{font-size:13px;line-height:1.7;color:#d5deef;margin:13px 0;overflow-wrap:anywhere}
+    .post-actions{display:flex;gap:7px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:11px}
+    .post-action{border:1px solid transparent;background:transparent;color:#91a0bd;padding:7px 10px;border-radius:9px;font-size:11px}
+    .post-action:hover{background:#ffffff08;color:white}
+    .post-action.liked{color:#ff8aab}
+    .side-panel{display:grid;align-content:start;gap:14px}
+    .widget{border:1px solid var(--line);background:linear-gradient(145deg,#12192b,#101525);border-radius:17px;padding:16px}
+    .widget h3{font-size:14px;margin-bottom:13px}
+    .widget-head{display:flex;justify-content:space-between;align-items:center}
+    .widget-head a{color:var(--cyan);font-size:10px}
+    .channel{display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:10px;color:#aebbd3;font-size:12px;cursor:pointer}
+    .channel:hover,.channel.selected{background:#ffffff08;color:white}
+    .channel .hash{color:#7794ff;font-weight:bold;font-size:15px}
+    .channel .members{margin-left:auto;color:#74819c;font-size:10px}
+    .event{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #ffffff08}
+    .event:last-child{border-bottom:0}
+    .datebox{background:#1b2540;border-radius:10px;padding:7px 9px;text-align:center;min-width:42px}
+    .datebox strong{font-size:14px;display:block}
+    .datebox small{font-size:9px;color:#91a5ff}
+    .event-title{font-size:11px;font-weight:700}
+    .event-sub{font-size:10px;color:var(--muted);margin-top:4px}
+    .member{display:flex;align-items:center;gap:9px;padding:8px 0}
+    .member .avatar{width:29px;height:29px;font-size:10px}
+    .member-name{font-size:11px;font-weight:600}
+    .member-role{font-size:10px;color:var(--muted);margin-top:3px}
+    .online-dot{width:7px;height:7px;border-radius:50%;background:var(--green);margin-left:auto}
+    .empty{color:var(--muted);font-size:12px;text-align:center;padding:28px 10px}
+    .statusline{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:6px}
+    .statusline .dot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+    .mobile-nav{display:none}
+    .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 18px;background:#18243c;border:1px solid #6887ff66;border-radius:12px;box-shadow:0 15px 50px #0008;z-index:50;font-size:12px;display:none}
+    .toast.show{display:block}
+    .login-overlay{position:fixed;inset:0;background:#070a14ee;backdrop-filter:blur(15px);display:none;place-items:center;z-index:100;padding:20px}
+    .login-box{max-width:420px;width:100%;padding:30px;background:#12192b;border:1px solid var(--line);border-radius:22px;text-align:center}
+    .login-box .brandmark{margin:auto;width:55px;height:55px;font-size:18px}
+    .login-box h2{margin:18px 0 8px}
+    .login-box p{font-size:12px;line-height:1.6;color:var(--muted)}
+    .login-box button{width:100%;margin-top:10px}
+    .menu-toggle{display:none}
+    footer{padding:24px 0;color:#697690;font-size:10px;text-align:center}
+    footer a{color:#a5b7ff}
+    @media(max-width:1150px){.layout{grid-template-columns:minmax(0,1fr) 260px}.main{padding:0 20px 30px}}
+    @media(max-width:900px){:root{--sidebar:220px}.layout{grid-template-columns:1fr}.side-panel{grid-template-columns:repeat(2,minmax(0,1fr))}.stat-row{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:650px){
+      .app{display:block}.sidebar{display:none}.main{padding:0 14px 88px}
+      .topbar{height:62px}.crumb{font-size:11px}.search input{width:150px}
+      .hero{display:block;padding:22px 0 15px}.hero-actions{margin-top:14px}
+      .hero p{font-size:12px}.stat-row{gap:8px;margin:10px 0 18px}
+      .stat{padding:12px}.stat strong{font-size:20px}
+      .side-panel{grid-template-columns:1fr}.post{padding:13px}
+      .composer{padding:12px}.composer-foot{align-items:flex-start}
+      .mobile-nav{position:fixed;bottom:0;left:0;right:0;z-index:30;display:flex;justify-content:space-around;padding:9px 4px calc(9px + env(safe-area-inset-bottom));background:#0b1020ed;backdrop-filter:blur(18px);border-top:1px solid var(--line)}
+      .mobile-nav button{border:0;background:transparent;color:#8593b0;font-size:10px;display:grid;gap:4px;justify-items:center;padding:5px 8px}
+      .mobile-nav button span{font-size:18px}.mobile-nav button.active{color:var(--cyan)}
+      .menu-toggle{display:inline-flex}
+      h1{font-size:28px}
+    }
+    @media(max-width:390px){.search input{width:120px}.top-actions{gap:6px}.btn{padding:9px 10px}.stat strong{font-size:18px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  </style>
+</head>
+<body>
+<div class="ambient" aria-hidden="true"><div class="orb one"></div><div class="orb two"></div><div class="orb three"></div></div>
+
+<div class="app">
+  <aside class="sidebar">
+    <a class="brand" href="index.html">
+      <div class="brandmark">IK</div>
+      <div><strong>IKAZE NEXUS</strong><small>Community Network</small></div>
+    </a>
+    <div class="nav-label">Community</div>
+    <nav class="nav">
+      <button class="active" data-view="home"><span class="ico">⌂</span> Community Home</button>
+      <button data-view="channels"><span class="ico">#</span> Spaces & Channels</button>
+      <button data-view="ideas"><span class="ico">✧</span> Idea Exchange</button>
+      <button data-view="knowledge"><span class="ico">▤</span> Knowledge Drops</button>
+      <button data-view="projects"><span class="ico">⌘</span> Project Collaboration</button>
+      <button data-view="events"><span class="ico">◷</span> Meetings & Events</button>
+      <button data-view="members"><span class="ico">♙</span> Members</button>
+      <button data-view="saved"><span class="ico">♡</span> Saved Items</button>
+    </nav>
+    <div class="nav-label">Your Spaces</div>
+    <nav class="nav" id="spaceNav">
+      <button data-channel="general"><span class="ico">#</span> general</button>
+      <button data-channel="coding"><span class="ico">#</span> coding</button>
+      <button data-channel="robotics"><span class="ico">#</span> robotics</button>
+      <button data-channel="ai"><span class="ico">#</span> ai-lab</button>
+      <button data-channel="ideas"><span class="ico">#</span> idea-vault</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="profile-mini" id="profileMini">
+        <div class="avatar">?</div><div><div class="name">Guest Member</div><div class="status">Sign in to participate</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="crumb"><a href="index.html">Academy</a> / <b>IKAZE NEXUS</b></div>
+      <div class="top-actions">
+        <div class="search"><span>⌕</span><input id="searchInput" type="search" placeholder="Search community..." /></div>
+        <button class="btn icon" id="notifBtn" title="Notifications">♧</button>
+        <button class="btn" id="signInBtn">Sign in</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Think together · Build together</div>
+        <h1>Welcome to the Nexus.</h1>
+        <p>A community where curious minds connect, ideas grow, knowledge moves, and technology becomes something we build together.</p>
+      </div>
+      <div class="hero-actions">
+        <button class="btn" id="exploreBtn">Explore spaces</button>
+        <button class="btn primary" id="joinBtn">Join the conversation ↗</button>
+      </div>
+    </section>
+
+    <section class="stat-row">
+      <div class="stat"><small>Community members</small><strong id="statMembers">—</strong><div class="sub">Academy network</div></div>
+      <div class="stat"><small>Discussions</small><strong id="statPosts">—</strong><div class="sub">Ideas in motion</div></div>
+      <div class="stat"><small>Spaces</small><strong id="statSpaces">5</strong><div class="sub">Explore interests</div></div>
+      <div class="stat"><small>Online now</small><strong id="statOnline">—</strong><div class="sub">Presence when available</div></div>
+    </section>
+
+    <section class="layout">
+      <div class="feed">
+        <div class="section-head"><h2 id="feedTitle">Community Feed</h2><div class="statusline"><span class="dot"></span><span id="connectionText">Connecting…</span></div></div>
+        <div class="tabs" id="feedTabs">
+          <button class="tab active" data-filter="all">All activity</button>
+          <button class="tab" data-filter="announcements">Announcements</button>
+          <button class="tab" data-filter="ideas">Ideas</button>
+          <button class="tab" data-filter="knowledge">Knowledge</button>
+          <button class="tab" data-filter="projects">Projects</button>
+        </div>
+
+        <div class="composer">
+          <div class="composer-top">
+            <div class="avatar" id="composerAvatar">?</div>
+            <textarea id="postText" placeholder="Share something with the community…"></textarea>
+          </div>
+          <div class="composer-foot">
+            <div class="compose-tools">
+              <button class="tool" data-compose="idea">✧ Idea</button>
+              <button class="tool" data-compose="knowledge">▤ Knowledge</button>
+              <button class="tool" data-compose="project">⌘ Project</button>
+            </div>
+            <button class="btn primary" id="publishBtn">Publish</button>
+          </div>
+        </div>
+
+        <div id="feedContainer">
+          <div class="empty">Loading community activity…</div>
+        </div>
+      </div>
+
+      <aside class="side-panel">
+        <div class="widget">
+          <div class="widget-head"><h3>Explore Spaces</h3><a href="#" id="allChannels">View all</a></div>
+          <div id="channelsWidget">
+            <div class="channel selected" data-channel="general"><span class="hash">#</span><span>general</span><span class="members">Community</span></div>
+            <div class="channel" data-channel="coding"><span class="hash">#</span><span>coding</span><span class="members">Software</span></div>
+            <div class="channel" data-channel="robotics"><span class="hash">#</span><span>robotics</span><span class="members">Robotics</span></div>
+            <div class="channel" data-channel="ai"><span class="hash">#</span><span>ai-lab</span><span class="members">AI & Data</span></div>
+            <div class="channel" data-channel="ideas"><span class="hash">#</span><span>idea-vault</span><span class="members">Ideas</span></div>
+          </div>
+        </div>
+
+        <div class="widget">
+          <div class="widget-head"><h3>Upcoming Activities</h3><a href="index.html">Academy</a></div>
+          <div id="eventsWidget">
+            <div class="empty">Events will appear here when published.</div>
+          </div>
+        </div>
+
+        <div class="widget">
+          <div class="widget-head"><h3>Community Members</h3><a href="#" id="membersLink">Discover</a></div>
+          <div id="membersWidget">
+            <div class="empty">Member list will load here.</div>
+          </div>
+        </div>
+
+        <div class="widget">
+          <h3>Our Community</h3>
+          <p style="color:var(--muted);font-size:11px;line-height:1.7;margin:0">Think. Learn. Build. Teach. Transform. Explore together and turn your curiosity into impact.</p>
+        </div>
+      </aside>
+    </section>
+    <footer>IKAZE NEXUS · Community collaboration<br/><br/><a href="index.html">Academy Home</a> &nbsp;·&nbsp; <a href="admin.html">Administration</a></footer>
+  </main>
+</div>
+
+<nav class="mobile-nav">
+  <button class="active" data-view="home"><span>⌂</span>Home</button>
+  <button data-view="channels"><span>#</span>Spaces</button>
+  <button data-view="ideas"><span>✧</span>Ideas</button>
+  <button data-view="events"><span>◷</span>Events</button>
+  <button data-view="members"><span>♙</span>Members</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-box">
+    <div class="brandmark">IK</div>
+    <h2>Enter the Nexus</h2>
+    <p>Sign in with your Academy account to publish, react, save posts, and participate in the community.</p>
+    <button class="btn primary" id="googleLogin">Continue with Google</button>
+    <button class="btn" id="closeLogin">Continue browsing</button>
+  </div>
+</div>
+
+<script type="module">
+  // =============================================================
+  // FIREBASE SETUP
+  // Replace these values with the same Firebase project config used
+  // by index.html and admin.html. Never expose private service keys.
+  // =============================================================
+  const firebaseConfig = {
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const configured = firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY" &&
+                    firebaseConfig.projectId !== "YOUR_PROJECT_ID";
+
+  let auth = null, db = null, currentUser = null;
+  let firebaseReady = false;
+  let activeChannel = "all", activeFilter = "all";
+  let posts = [], members = [], events = [], savedIds = new Set();
+  let composeType = "post";
+  let unsubPosts = null, unsubMembers = null, unsubEvents = null;
+
+  const $ = (id) => document.getElementById(id);
+  const esc = (str="") => String(str).replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+  const initials = (name="Member") => name.trim().split(/\s+/).slice(0,2).map(s=>s[0]||"").join("").toUpperCase();
+  const toast = (msg) => {
+    const el=$("toast"); el.textContent=msg; el.classList.add("show");
+    setTimeout(()=>el.classList.remove("show"),2600);
+  };
+  function avatarHtml(name, photo, small=false) {
+    return `<div class="avatar">${photo ? `<img src="${esc(photo)}" alt="">` : esc(initials(name))}</div>`;
+  }
+  function profileName(user) { return user?.displayName || user?.email?.split("@")[0] || "Member"; }
+
+  // Load Firebase only if config is filled in.
+  if (configured) {
+    try {
+      const [appMod, authMod, firestoreMod] = await Promise.all([
+        import("https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"),
+        import("https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js"),
+        import("https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js")
+      ]);
+      const app = appMod.initializeApp(firebaseConfig);
+      auth = authMod.getAuth(app);
+      db = firestoreMod.getFirestore(app);
+      firebaseReady = true;
+      window.__groupFirebase = { app, auth, db };
+      window.__groupFirestore = firestoreMod;
+      authMod.onAuthStateChanged(auth, user => {
+        currentUser = user;
+        updateProfile();
+        renderFeed();
+      });
+      $("connectionText").textContent = "Live connection ready";
+      subscribe();
+    } catch (err) {
+      console.error("Firebase initialization error:", err);
+      $("connectionText").textContent = "Connection error";
+      toast("Firebase could not initialize. Check your config.");
+    }
+  } else {
+    $("connectionText").textContent = "Preview mode · Firebase not configured";
+    $("feedContainer").innerHTML = `<div class="empty">Firebase configuration is not set yet. Add your project's configuration to activate live community content. This preview does not save posts.</div>`;
+  }
+
+  function updateProfile() {
+    const user=currentUser;
+    const name=user?profileName(user):"Guest Member";
+    const photo=user?.photoURL||"";
+    $("profileMini").innerHTML=`${avatarHtml(name,photo)}<div><div class="name">${esc(name)}</div><div class="status">${user?"Signed in":"Sign in to participate"}</div></div>`;
+    $("composerAvatar").innerHTML=photo?`<img src="${esc(photo)}" alt="">`:esc(initials(name));
+    $("signInBtn").textContent=user?"Sign out":"Sign in";
+  }
+
+  function subscribe() {
+    if (!firebaseReady) return;
+    const f=window.__groupFirestore;
+    try {
+      unsubPosts=f.onSnapshot(f.query(f.collection(db,"nexusPosts"),f.orderBy("createdAt","desc"),f.limit(100)),snap=>{
+        posts=snap.docs.map(d=>({id:d.id,...d.data()}));
+        renderFeed();
+        $("statPosts").textContent=posts.length;
+      },err=>{console.error(err);$("connectionText").textContent="Feed unavailable";});
+      unsubMembers=f.onSnapshot(f.query(f.collection(db,"nexusMembers"),f.limit(30)),snap=>{
+        members=snap.docs.map(d=>({id:d.id,...d.data()}));
+        renderMembers();
+        $("statMembers").textContent=members.length;
+        $("statOnline").textContent="—";
+      },err=>console.warn("Members:",err));
+      unsubEvents=f.onSnapshot(f.query(f.collection(db,"nexusEvents"),f.orderBy("startAt","asc"),f.limit(5)),snap=>{
+        events=snap.docs.map(d=>({id:d.id,...d.data()}));
+        renderEvents();
+      },err=>console.warn("Events:",err));
+    } catch(err){console.error(err);$("connectionText").textContent="Live data error";}
+  }
+
+  function postMatches(p) {
+    const type=p.type||"post";
+    const channel=p.channel||"general";
+    if(activeChannel!=="all" && channel!==activeChannel) return false;
+    if(activeFilter!=="all" && type!==activeFilter) return false;
+    const search=$("searchInput").value.trim().toLowerCase();
+    if(search && !(String(p.text||"").toLowerCase().includes(search) ||
+       String(p.authorName||"").toLowerCase().includes(search) ||
+       String(p.channel||"").toLowerCase().includes(search))) return false;
+    return true;
+  }
+  function renderFeed() {
+    const list=posts.filter(postMatches);
+    if(!list.length){
+      $("feedContainer").innerHTML=`<div class="empty">${firebaseReady?"No posts here yet. Start the conversation!":"Configure Firebase to see community posts."}</div>`;
+      return;
+    }
+    $("feedContainer").innerHTML=list.map(p=>{
+      const name=p.authorName||"Member", photo=p.authorPhoto||"";
+      const type=p.type||"post", liked=!!(currentUser && (p.likes||[]).includes(currentUser.uid));
+      const tag=type==="idea"?"IDEA":type==="knowledge"?"KNOWLEDGE":type==="project"?"PROJECT":type==="announcement"?"ANNOUNCEMENT":"COMMUNITY";
+      const date=p.createdAt?.toDate?p.createdAt.toDate().toLocaleString():p.createdAt instanceof Date?p.createdAt.toLocaleString():"Recently";
+      return `<article class="post" data-id="${esc(p.id)}">
+        <div class="post-head">${avatarHtml(name,photo)}<div><div class="post-author">${esc(name)}</div><div class="post-meta">${esc(date)} · #${esc(p.channel||"general")}</div></div><span class="post-tag">${tag}</span></div>
+        <div class="post-content">${esc(p.text||"").replace(/\n/g,"<br>")}</div>
+        <div class="post-actions">
+          <button class="post-action ${liked?"liked":""}" data-action="like" data-id="${esc(p.id)}">♡ ${p.likes?.length||0}</button>
+          <button class="post-action" data-action="reply" data-id="${esc(p.id)}">↩ Reply</button>
+          <button class="post-action" data-action="save" data-id="${esc(p.id)}">${savedIds.has(p.id)?"★ Saved":"☆ Save"}</button>
+          <button class="post-action" data-action="share" data-id="${esc(p.id)}">↗ Share</button>
+        </div>
+      </article>`;
+    }).join("");
+  }
+
+  async function publishPost() {
+    const text=$("postText").value.trim();
+    if(!text) return toast("Write something before publishing.");
+    if(!currentUser) return openLogin();
+    if(!firebaseReady) return toast("Firebase is not configured.");
+    try {
+      const f=window.__groupFirestore;
+      await f.addDoc(f.collection(db,"nexusPosts"),{
+        text,type:composeType,channel:activeChannel==="all"?"general":activeChannel,
+        authorUid:currentUser.uid,authorName:profileName(currentUser),
+        authorPhoto:currentUser.photoURL||"",likes:[],replyCount:0,
+        createdAt:f.serverTimestamp(),visibility:"published"
+      });
+      $("postText").value="";
+      composeType="post";
+      toast("Your post was published.");
+    } catch(err){console.error(err);toast("Publishing failed. Check your permissions.");}
+  }
+
+  async function likePost(id) {
+    if(!currentUser) return openLogin();
+    const p=posts.find(x=>x.id===id); if(!p) return;
+    const f=window.__groupFirestore;
+    try {
+      const ref=f.doc(db,"nexusPosts",id);
+      await f.runTransaction(db,async tx=>{
+        const snap=await tx.get(ref); if(!snap.exists()) return;
+        const likes=snap.data().likes||[];
+        const next=likes.includes(currentUser.uid)?likes.filter(uid=>uid!==currentUser.uid):[...likes,currentUser.uid];
+        tx.update(ref,{likes:next});
+      });
+    } catch(err){console.error(err);toast("Could not update reaction.");}
+  }
+
+  function renderMembers() {
+    const visible=members.slice(0,8);
+    if(!visible.length){$("membersWidget").innerHTML=`<div class="empty">Members will appear as they join.</div>`;return;}
+    $("membersWidget").innerHTML=visible.map(m=>{
+      const name=m.displayName||m.name||"Member";
+      return `<div class="member">${avatarHtml(name,m.photoURL||m.photo||"")}<div><div class="member-name">${esc(name)}</div><div class="member-role">${esc(m.role||"Community member")}</div></div></div>`;
+    }).join("");
+  }
+  function renderEvents() {
+    if(!events.length){$("eventsWidget").innerHTML=`<div class="empty">Events will appear here when published.</div>`;return;}
+    $("eventsWidget").innerHTML=events.map(e=>{
+      let d=e.startAt?.toDate?e.startAt.toDate():new Date(e.startAt||Date.now());
+      return `<div class="event"><div class="datebox"><strong>${d.getDate()}</strong><small>${d.toLocaleString(undefined,{month:"short"}).toUpperCase()}</small></div><div><div class="event-title">${esc(e.title||"Community event")}</div><div class="event-sub">${esc(e.location||e.type||"Academy activity")}</div></div></div>`;
+    }).join("");
+  }
+
+  function openLogin(){ $("loginOverlay").style.display="grid"; }
+  function closeLogin(){ $("loginOverlay").style.display="none"; }
+
+  // UI events
+  $("publishBtn").addEventListener("click",publishPost);
+  $("signInBtn").addEventListener("click",async()=>{
+    if(currentUser){
+      try{await window.__groupAuth.signOut(auth);}catch(e){console.error(e);toast("Sign out failed.");}
+    } else openLogin();
+  });
+  $("googleLogin").addEventListener("click",async()=>{
+    if(!firebaseReady) return toast("Firebase configuration is required.");
+    try{
+      const a=await import("https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js");
+      await a.signInWithPopup(auth,new a.GoogleAuthProvider());
+      closeLogin();toast("Welcome to the Nexus.");
+    }catch(e){console.error(e);toast(e.code==="auth/popup-closed-by-user"?"Sign-in cancelled.":"Google sign-in failed.");}
+  });
+  // Expose auth module for sign-out handler.
+  if(firebaseReady) import("https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js").then(m=>window.__groupAuth=m);
+
+  $("closeLogin").addEventListener("click",closeLogin);
+  $("joinBtn").addEventListener("click",()=>{ $("postText").focus(); if(!currentUser) openLogin(); });
+  $("exploreBtn").addEventListener("click",()=>{document.querySelector(".side-panel").scrollIntoView({behavior:"smooth"});});
+  $("allChannels").addEventListener("click",e=>{e.preventDefault();setChannel("all");});
+  $("membersLink").addEventListener("click",e=>{e.preventDefault();toast("Member discovery coming through the community directory.");});
+  $("notifBtn").addEventListener("click",()=>toast(currentUser?"Notifications will appear here as they are connected.":"Sign in to receive notifications."));
+  $("searchInput").addEventListener("input",renderFeed);
+  $("feedTabs").addEventListener("click",e=>{
+    const b=e.target.closest("[data-filter]");if(!b)return;
+    activeFilter=b.dataset.filter;
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t===b));
+    renderFeed();
+  });
+  document.querySelectorAll("[data-channel]").forEach(el=>el.addEventListener("click",()=>setChannel(el.dataset.channel)));
+  function setChannel(ch){
+    activeChannel=ch;
+    document.querySelectorAll("[data-channel]").forEach(el=>el.classList.toggle("selected",el.dataset.channel===ch));
+    $("feedTitle").textContent=ch==="all"?"Community Feed":`# ${ch}`;
+    renderFeed();
+  }
+  document.querySelectorAll("[data-compose]").forEach(b=>b.addEventListener("click",()=>{
+    composeType=b.dataset.compose;
+    $("postText").placeholder=`Share a ${composeType} with the community…`;
+    toast(`Post type: ${composeType}`);
+    $("postText").focus();
+  }));
+  $("feedContainer").addEventListener("click",async e=>{
+    const b=e.target.closest("[data-action]");if(!b)return;
+    const id=b.dataset.id,action=b.dataset.action;
+    if(action==="like")return likePost(id);
+    if(action==="save"){
+      savedIds.has(id)?savedIds.delete(id):savedIds.add(id);
+      renderFeed();return;
+    }
+    const post=posts.find(p=>p.id===id);
+    if(action==="reply"){
+      if(!currentUser)return openLogin();
+      const reply=prompt("Write your reply:");
+      if(!reply?.trim())return;
+      try{
+        const f=window.__groupFirestore;
+        await f.addDoc(f.collection(db,"nexusReplies"),{postId:id,text:reply.trim(),authorUid:currentUser.uid,authorName:profileName(currentUser),createdAt:f.serverTimestamp()});
+        await f.updateDoc(f.doc(db,"nexusPosts",id),{replyCount:f.increment(1)});
+        toast("Reply sent.");
+      }catch(err){console.error(err);toast("Reply could not be sent.");}
+    }
+    if(action==="share"){
+      const url=location.origin+location.pathname+"?post="+encodeURIComponent(id);
+      try{await navigator.clipboard.writeText(url);toast("Post link copied.");}catch{toast("Unable to copy link.");}
+    }
+  });
+  document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>{
+    const v=b.dataset.view;
+    const destinations={home:"Community Feed",channels:"Spaces & Channels",ideas:"Idea Exchange",knowledge:"Knowledge Drops",projects:"Project Collaboration",events:"Meetings & Events",members:"Members",saved:"Saved Items"};
+    if(v!=="home"){toast(`${destinations[v]} view is being prepared. Feed remains available.`);}
+    document.querySelectorAll("[data-view]").forEach(el=>el.classList.toggle("active",el===b));
+  }));
+  updateProfile();
+</script>
+</body>
+</html>
